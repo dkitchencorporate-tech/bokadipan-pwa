@@ -318,7 +318,7 @@ INSERT INTO products (id, name, slug, description, price, category_id, is_active
 
 -- Productos: Complementos & Picoteo Artesanal
 ('patatas-rusticas', 'Ración de Patatas Fritas Rústicas', 'patatas-rusticas', 'Patatas naturales cortadas a mano con piel, fritas en aceite limpio y sazonadas con sal marina y romero.', 3.50, 'complementos', true, true, true, ARRAY[]::TEXT[], 8),
-('patatas-bolsa', 'Patatas Fritas de Bolsa Artesanas', 'patatas-bolsa', 'Bolsa de patatas fritas artesanas crujientes en sartén con aceite de oliva y punto justo de sal.', 2.00, 'complementos', true, true, false, ARRAY[]::TEXT[], 9),
+('patatas-bolsa', 'Patatas Fritas de Bolsa Artesanas', 'patatas-bolsa', 'Bolsa individual de patatas fritas artesanas tradicionales, doradas y crujientes con aceite de oliva virgen y punto justo de sal marina.', 2.00, 'complementos', true, true, false, ARRAY[]::TEXT[], 9),
 ('aceitunas-alinadas', 'Ración de Aceitunas Aliñadas', 'aceitunas-alinadas', 'Aceitunas manzanilla selectas aliñadas al estilo tradicional con orégano, ajo suave y AOVE.', 2.50, 'complementos', true, true, false, ARRAY[]::TEXT[], 10),
 ('encurtidos-huerta', 'Ración de Encurtidos de la Huerta', 'encurtidos-huerta', 'Selección de encurtidos artesanos: banderillas, pepinillos crujientes, cebollitas y guindillas suaves.', 2.80, 'complementos', true, true, false, ARRAY[]::TEXT[], 11),
 

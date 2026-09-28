@@ -29,7 +29,8 @@
 
 ## 2. HISTORIAL COMPACTADO DE HITOS PREVIOS
 
-* **28-sep-2026 (v1.6.0):** Saneamiento de imágenes de postres (Tiramisú en vaso con mascarpone/cacao, Mousse belga, Cheesecake) y complementos (patatas de bolsa, aceitunas y encurtidos con fotos dedicadas), y ajuste responsive de la cabecera superior y BokadipanLogo para evitar cualquier corte o desplazamiento en móviles.
+* **28-sep-2026 (v1.7.0):** Reemplazo riguroso de adsets con imágenes reales y verificadas de alta gastronomía (aceitunas aliñadas tradicionales, encurtidos/banderillas, patatas fritas artesanas de bolsa, patatas rústicas, tiramisú en vaso, mousse de chocolate y cheesecake), eliminación de mención a sartén en descripción y purga de archivos temporales.
+* **28-sep-2026 (v1.6.0):** Saneamiento de imágenes de postres y complementos, y ajuste responsive de la cabecera superior y BokadipanLogo para evitar cualquier corte o desplazamiento en móviles.
 * **28-sep-2026 (v1.5.0):** Rediseño integral de identidad gourmet de autor (nuevo logotipo emblema de espigas/hogaza artesanal, preloader tipográfico sobrio sin saturación, paleta verde bosque profundo `#1B3818` / dorado corteza `#C88A35`, Hero simplificado de alto contraste y CheckoutModal sincronizado).
 * **28-sep-2026 (v1.4.0):** Inclusión de categoría `Complementos & Picoteo` (4 productos con imágenes: patatas rústicas, patatas de bolsa, aceitunas y encurtidos), saneamiento del banner Hero (eliminada referencia a tapas/bebidas incluidas) y blindaje del centrado responsive de `CartBar`.
 * **28-sep-2026 (v1.3.0):** Corrección integral de responsividad y contraste en `UpsellModal` y `CheckoutModal` (paleta rústica `#2D5A27`/`#FAF6F0`/`#E5DCD0`, botones CTA contrastados con texto blanco nítido, sin desbordamientos en móvil).

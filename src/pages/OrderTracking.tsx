@@ -184,14 +184,6 @@ export default function OrderTracking({ onBack }: { onBack: () => void }) {
                     </div>
                   </div>
                 )}
-                              {statusLabel}
-                            </span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
 
                 {/* Active Order Card */}
                 <div className="bg-[#FFFFFF] border border-gray-200 rounded-3xl overflow-hidden shadow-2xl">

@@ -98,20 +98,20 @@ export default function IngredientsModal({ product, onClose }: IngredientsModalP
         </div>
 
         {/* Contenido scrolleable */}
-        <div className="p-5 sm:p-6 overflow-y-auto space-y-5 flex-1 custom-scrollbar">
+        <div className="p-5 sm:p-6 overflow-y-auto space-y-5 flex-1 custom-scrollbar bg-white">
           
           {/* Título de la Ración y Descripción Oficial */}
           <div>
             <div className="flex items-start justify-between gap-3">
-              <h2 className="font-display font-black text-2xl sm:text-3xl text-brand-ink uppercase tracking-wide leading-tight">
+              <h2 className="font-display font-black text-2xl sm:text-3xl text-[#1A201A] uppercase tracking-wide leading-tight">
                 {displayName}
               </h2>
-              <span className="font-display font-black text-brand-primaryHover text-xl sm:text-2xl shrink-0 whitespace-nowrap">
+              <span className="font-display font-black text-[#2D5A27] text-xl sm:text-2xl shrink-0 whitespace-nowrap">
                 {BASE_PRICE.toFixed(2).replace('.', ',')}&nbsp;€
               </span>
             </div>
             {displayDesc && (
-              <p className="text-gray-500 text-sm leading-relaxed mt-1.5 font-medium">
+              <p className="text-[#5C6B5C] text-sm leading-relaxed mt-1.5 font-medium">
                 {displayDesc}
               </p>
             )}
@@ -119,14 +119,14 @@ export default function IngredientsModal({ product, onClose }: IngredientsModalP
 
           {/* Sección de Toppings / Extras (Solo si no es postre) */}
           {!isDessert && (
-            <div className="space-y-3 pt-3 border-t border-gray-100">
+            <div className="space-y-3 pt-3 border-t border-[#E5DCD0]/60">
               <div className="flex items-center justify-between">
-                <label className="text-brand-ink font-display font-bold uppercase tracking-wider text-xs flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-brand-primary inline-block"></span>
+                <label className="text-[#1A201A] font-display font-black uppercase tracking-wider text-xs flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#2D5A27] inline-block"></span>
                   {t('add_extra_ingredients') || 'Añadir Toppings Extras (+1,00 €/ud)'}
                 </label>
                 {selectedExtras.length > 0 && (
-                  <span className="text-[11px] font-bold text-brand-primaryHover bg-brand-primary/10 px-2 py-0.5 rounded-md whitespace-nowrap">
+                  <span className="text-[11px] font-bold text-[#2D5A27] bg-[#EAF2E8] px-2 py-0.5 rounded-md whitespace-nowrap border border-[#2D5A27]/20">
                     +{(selectedExtras.length * 1.00).toFixed(2).replace('.', ',')}&nbsp;€
                   </span>
                 )}
@@ -140,15 +140,15 @@ export default function IngredientsModal({ product, onClose }: IngredientsModalP
                       key={extra}
                       type="button"
                       onClick={() => toggleExtra(extra)}
-                      className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold border transition-all flex items-center gap-1.5 ${
+                      className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold border transition-all flex items-center gap-1.5 ${
                         isSel
-                          ? 'bg-brand-primary text-white border-brand-primaryHover shadow-md scale-[1.02]'
-                          : 'bg-gray-50 text-gray-700 border-gray-200 hover:border-brand-primary/50 hover:bg-white'
+                          ? 'bg-[#2D5A27] text-white border-[#1E3D1A] shadow-md scale-[1.02]'
+                          : 'bg-[#FAF6F0] text-[#1A201A] border-[#E5DCD0] hover:border-[#2D5A27] hover:bg-white'
                       }`}
                     >
                       <span className="font-black">{isSel ? '✓' : '+'}</span>
                       <span>{tDynamic(extra)}</span>
-                      <span className={`text-[10px] px-1 rounded font-black ${isSel ? 'bg-black/20 text-white' : 'text-brand-primaryHover'}`}>
+                      <span className={`text-[10px] px-1 rounded font-black ${isSel ? 'bg-black/20 text-white' : 'text-[#2D5A27]'}`}>
                         +1€
                       </span>
                     </button>
@@ -159,41 +159,41 @@ export default function IngredientsModal({ product, onClose }: IngredientsModalP
           )}
 
           {/* Sección de Notas para Cocina */}
-          <div className="space-y-2 pt-3 border-t border-gray-100">
-            <label className="text-brand-ink font-display font-bold uppercase tracking-wider text-xs flex items-center gap-2">
+          <div className="space-y-2 pt-3 border-t border-[#E5DCD0]/60">
+            <label className="text-[#1A201A] font-display font-black uppercase tracking-wider text-xs flex items-center gap-2">
               <span>📝</span>
               <span>{t('special_notes') || 'Instrucciones o notas para cocina'}</span>
             </label>
             <input
               type="text"
-              placeholder="Ej. salsa aparte, poco picante, bien crujientes..."
+              placeholder="Ej. pan muy tostado, sin cebolla, salsa aparte..."
               value={itemNotes}
               onChange={(e) => setItemNotes(e.target.value)}
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-brand-ink placeholder-gray-400 focus:border-brand-primary focus:bg-white outline-none transition-all font-medium"
+              className="w-full bg-[#FAF6F0] border border-[#E5DCD0] rounded-xl px-4 py-3 text-sm text-[#1A201A] placeholder-gray-400 focus:border-[#2D5A27] focus:bg-white outline-none transition-all font-medium"
             />
           </div>
 
         </div>
 
         {/* Footer: Selector de Cantidad y Botón Añadir */}
-        <div className="p-4 sm:p-5 border-t border-gray-200 bg-white flex items-center justify-between gap-3 shrink-0">
+        <div className="p-4 sm:p-5 border-t border-[#E5DCD0] bg-white flex items-center justify-between gap-3 shrink-0">
           {/* Selector de cantidad */}
-          <div className="flex items-center bg-gray-100 border border-gray-200 rounded-2xl p-1 shrink-0">
+          <div className="flex items-center bg-[#FAF6F0] border border-[#E5DCD0] rounded-2xl p-1 shrink-0">
             <button
               type="button"
               onClick={() => setQuantity(q => Math.max(1, q - 1))}
               disabled={quantity <= 1}
-              className="w-9 h-9 flex items-center justify-center rounded-xl bg-white text-gray-700 hover:bg-gray-50 font-black text-lg disabled:opacity-30 disabled:cursor-not-allowed shadow-sm active:scale-90 transition-all"
+              className="w-9 h-9 flex items-center justify-center rounded-xl bg-white text-[#1A201A] hover:bg-[#EAF2E8] font-black text-lg disabled:opacity-30 disabled:cursor-not-allowed shadow-sm active:scale-90 transition-all border border-[#E5DCD0]"
             >
               -
             </button>
-            <span className="w-9 text-center font-display font-black text-base text-brand-ink">
+            <span className="w-9 text-center font-display font-black text-base text-[#1A201A]">
               {quantity}
             </span>
             <button
               type="button"
               onClick={() => setQuantity(q => q + 1)}
-              className="w-9 h-9 flex items-center justify-center rounded-xl bg-white text-gray-700 hover:bg-gray-50 font-black text-lg shadow-sm active:scale-90 transition-all"
+              className="w-9 h-9 flex items-center justify-center rounded-xl bg-white text-[#1A201A] hover:bg-[#EAF2E8] font-black text-lg shadow-sm active:scale-90 transition-all border border-[#E5DCD0]"
             >
               +
             </button>
@@ -203,7 +203,7 @@ export default function IngredientsModal({ product, onClose }: IngredientsModalP
           <button
             type="button"
             onClick={handleAddToCart}
-            className="flex-1 bg-gradient-to-r from-brand-primary to-brand-primaryHover hover:brightness-110 text-white font-display font-black py-3.5 px-5 rounded-2xl text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-between shadow-[0_4px_20px_rgba(245,158,11,0.35)] active:scale-95"
+            className="flex-1 bg-[#2D5A27] hover:bg-[#1E3D1A] text-white font-display font-black py-3.5 px-5 rounded-2xl text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-between shadow-[0_8px_20px_rgba(45,90,39,0.35)] active:scale-95 border border-[#4D7C0F]"
           >
             <span>{t('add_to_order') || 'Añadir al pedido'}</span>
             <span className="bg-black/20 px-2.5 py-1 rounded-xl font-mono text-sm sm:text-base whitespace-nowrap">

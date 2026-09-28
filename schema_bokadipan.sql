@@ -17,7 +17,20 @@ CREATE TABLE IF NOT EXISTS categories (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- 2. TABLA: PRODUCTOS & COMBOS
+-- 2. TABLA: SUBCATEGORÍAS (Agrupación de Bebidas, Cervezas, Aguas)
+CREATE TABLE IF NOT EXISTS subcategories (
+    id VARCHAR(64) PRIMARY KEY,
+    category_id VARCHAR(64) REFERENCES categories(id) ON DELETE CASCADE,
+    name VARCHAR(128) NOT NULL,
+    description TEXT,
+    image_url TEXT,
+    sort_order INT DEFAULT 0,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 3. TABLA: PRODUCTOS & COMBOS
 CREATE TABLE IF NOT EXISTS products (
     id VARCHAR(64) PRIMARY KEY,
     name VARCHAR(128) NOT NULL,
@@ -26,10 +39,13 @@ CREATE TABLE IF NOT EXISTS products (
     price NUMERIC(10, 2) NOT NULL CHECK (price >= 0),
     compare_at_price NUMERIC(10, 2),
     category_id VARCHAR(64) REFERENCES categories(id) ON DELETE SET NULL,
+    subcategory_id VARCHAR(64) REFERENCES subcategories(id) ON DELETE SET NULL,
     image_url TEXT,
     is_active BOOLEAN DEFAULT TRUE,
+    is_available BOOLEAN DEFAULT TRUE,
     is_featured BOOLEAN DEFAULT FALSE,
     is_upsell BOOLEAN DEFAULT FALSE,
+    badge VARCHAR(64),
     allergens TEXT[] DEFAULT '{}',
     stock INT DEFAULT 999,
     sort_order INT DEFAULT 0,
@@ -37,7 +53,7 @@ CREATE TABLE IF NOT EXISTS products (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- 3. TABLA: CUPONES & PROMOCIONES
+-- 4. TABLA: CUPONES & PROMOCIONES
 CREATE TABLE IF NOT EXISTS coupons (
     id VARCHAR(64) PRIMARY KEY,
     code VARCHAR(32) UNIQUE NOT NULL,
@@ -51,7 +67,7 @@ CREATE TABLE IF NOT EXISTS coupons (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- 4. TABLA: USUARIOS & CLIENTES VIP (2FA TOTP + EMAIL VERIFICATION)
+-- 5. TABLA: USUARIOS & CLIENTES VIP (2FA TOTP + EMAIL VERIFICATION)
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -69,7 +85,7 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- 5. TABLA: PEDIDOS (ORDERS)
+-- 6. TABLA: PEDIDOS (ORDERS)
 CREATE TABLE IF NOT EXISTS orders (
     id VARCHAR(64) PRIMARY KEY,
     order_number SERIAL,
@@ -96,7 +112,7 @@ CREATE TABLE IF NOT EXISTS orders (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- 6. TABLA: LÍNEAS DE PEDIDO (ORDER_ITEMS)
+-- 7. TABLA: LÍNEAS DE PEDIDO (ORDER_ITEMS)
 CREATE TABLE IF NOT EXISTS order_items (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     order_id VARCHAR(64) NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
@@ -109,7 +125,7 @@ CREATE TABLE IF NOT EXISTS order_items (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- 7. TABLA: CONFIGURACIÓN GLOBAL & SWITCHES OPERATIVOS
+-- 8. TABLA: CONFIGURACIÓN GLOBAL & SWITCHES OPERATIVOS
 CREATE TABLE IF NOT EXISTS app_settings (
     key VARCHAR(64) PRIMARY KEY,
     value JSONB NOT NULL,
@@ -185,7 +201,7 @@ BEGIN
     LOOP
         SELECT price, name INTO v_db_price, v_db_name
         FROM products
-        WHERE id = v_item.product_id AND is_active = TRUE;
+        WHERE id = v_item.product_id AND (is_active = TRUE OR is_available = TRUE);
 
         IF v_db_price IS NULL THEN
             RAISE EXCEPTION 'Producto no disponible o invalido: %', v_item.product_id;
@@ -265,55 +281,71 @@ END;
 $$;
 
 -- ==============================================================================
--- 🍃 SEED DATA: CATEGORÍAS & PRODUCTOS BOKADIPAN
+-- 🍃 SEED DATA: CATEGORÍAS, SUBCATEGORÍAS & PRODUCTOS BOKADIPAN
 -- ==============================================================================
 
+-- Categorías Maestras
 INSERT INTO categories (id, name, description, icon, sort_order, is_active) VALUES
-('bocadillos', 'Bocadillos Rústicos AOVE', 'Bocadillos de 20cm en pan artesano de horno de piedra con AOVE. Incluyen tapa de picoteo y bebida.', 'Utensils', 1, true),
-('postres', 'Mousses Artesanales', 'Mousses gourmet en vaso con nata montada fresca.', 'Cake', 2, true),
-('bebidas-eco', 'Pa la Sed (Ecológicas)', 'Refrescos bio naturales y fermentados Bionade 330ml.', 'Leaf', 3, true),
-('bebidas-trad', 'Bebidas Tradicionales', 'Refrescos clásicos fríos en lata 330ml.', 'GlassWater', 4, true),
-('cervezas', 'Cervezas & Birras', 'Cervezas nacionales y de importación bien frías.', 'Beer', 5, true)
+('bocadillos', 'Bocadillos Rústicos AOVE', 'Bocadillos gourmet de 20cm en pan artesanal al horno de piedra con aceite de oliva virgen extra (AOVE).', 'Utensils', 1, true),
+('postres', 'Postres Artesanos', 'Postres artesanos en tarrina individual sellada para entrega a domicilio.', 'Cake', 2, true),
+('bebidas', 'Bebidas & Cervezas Frías', 'Refrescos fríos en lata 330ml, cervezas nacionales/importación y agua mineral.', 'GlassWater', 3, true)
 ON CONFLICT (id) DO UPDATE SET 
     name = EXCLUDED.name, 
     description = EXCLUDED.description, 
     sort_order = EXCLUDED.sort_order;
 
-INSERT INTO products (id, name, slug, description, price, category_id, is_active, is_featured, allergens, sort_order) VALUES
-('bokadi-serrano', 'Bokadi Serrano', 'bokadi-serrano', 'Bocadillo de pan rústico de 20cm elaborado con AOVE hecho en horno de piedra, restregado con espuma de tomate con sal, orégano y aceite de oliva virgen extra, más 100gr de jamón serrano selecto. Incluye ración de olivas de picoteo y una bebida de su elección.', 9.90, 'bocadillos', true, true, ARRAY['gluten'], 1),
-('boka-mar', 'Boka - Mar', 'boka-mar', 'Bocadillo de pan rústico de 20cm elaborado con AOVE hecho en horno de piedra, relleno con calamares a la romana, pimientos verdes salteados en AOVE y sal gorda, más salsa de alioli. Incluye ración de salpicón de pulpo para picoteo y una bebida de su elección.', 11.90, 'bocadillos', true, true, ARRAY['gluten', 'moluscos', 'huevo'], 2),
-('boka-atun', 'Boka - Atún', 'boka-atun', 'Bocadillo de pan rústico de 20cm elaborado con AOVE hecho en horno de piedra, relleno con tomates cortados, lechuga y cebolla, atún, jamón york y extra de queso. Incluye ración de patatas chips para picoteo y una bebida de su elección.', 11.50, 'bocadillos', true, false, ARRAY['gluten', 'pescado', 'lacteos'], 3),
-('bokadi-bacon', 'Bokadi Bacon', 'bokadi-bacon', 'Bocadillo de pan rústico de 20cm elaborado con AOVE hecho en horno de piedra, relleno con tiras de bacon crujiente y extra queso fundido. Incluye una ración de ensaladilla rusa como acompañante y una bebida de su elección.', 10.90, 'bocadillos', true, false, ARRAY['gluten', 'lacteos', 'huevo'], 4),
-('bokadi-lomo', 'Bokadi Lomo', 'bokadi-lomo', 'Bocadillo de pan rústico de 20cm elaborado con AOVE hecho en horno de piedra, relleno con lomo salteado al grill, pimientos de padrón verdes y AOVE. Incluye porción de queso madurado de picoteo y una bebida de su elección.', 11.50, 'bocadillos', true, true, ARRAY['gluten', 'lacteos'], 5),
-('bokadi-pollo', 'Bokadi Pollo', 'bokadi-pollo', 'Bocadillo de pan rústico de 20cm elaborado con AOVE hecho en horno de piedra, relleno con pollo crujiente estilo Kentucky, salsa de queso cheddar, lechuga, tomate y cebolla. Incluye porción de patatas fritas y una bebida de su elección.', 11.90, 'bocadillos', true, true, ARRAY['gluten', 'lacteos'], 6),
-('bokadi-burger', 'Bokadi Burger', 'bokadi-burger', 'Bocadillo de pan rústico de 20cm elaborado con AOVE hecho en horno de piedra, relleno con carne salteada al grill con cebolla, tomate cortado, lechuga, queso gouda y salsa de ajo. Incluye porción de patatas fritas y una bebida de su elección.', 11.90, 'bocadillos', true, true, ARRAY['gluten', 'lacteos', 'huevo'], 7),
+-- Subcategorías de Bebidas (Agrupación con 1 sola tarjeta visible que abre modal)
+INSERT INTO subcategories (id, category_id, name, description, image_url, sort_order, is_active) VALUES
+('sub-refrescos', 'bebidas', 'Refrescos Clásicos (33cl)', 'Lata 330ml servida bien fría (Coca-Cola, Zero, Fanta, Sprite).', '/assets/products/refrescos-clasicos.jpg', 1, true),
+('sub-cervezas', 'bebidas', 'Cervezas Premium (33cl)', 'Cervezas nacionales y de importación en botella o tercio frío.', '/assets/products/cervezas-premium.jpg', 2, true),
+('sub-aguas', 'bebidas', 'Agua Mineral (50cl)', 'Botella 500ml fría de manantial natural.', '/assets/products/agua-mineral.jpg', 3, true)
+ON CONFLICT (id) DO UPDATE SET 
+    name = EXCLUDED.name, 
+    description = EXCLUDED.description, 
+    image_url = EXCLUDED.image_url,
+    sort_order = EXCLUDED.sort_order;
 
--- Postres
-('mousse-chocolate-fresas', 'Mousse de Chocolate y Fresas con Nata', 'mousse-chocolate-fresas', 'Mousse artesanal de chocolate belga con fresas naturales y corona de nata montada fresca.', 3.90, 'postres', true, true, ARRAY['lacteos'], 8),
-('mousse-vainilla-chocolate', 'Mousse de Vainilla y Chocolate con Nata', 'mousse-vainilla-chocolate', 'Mousse artesanal de vainilla y chocolate con nata montada.', 3.90, 'postres', true, false, ARRAY['lacteos'], 9),
-('mousse-fresa-frutos-bosque', 'Mousse de Fresa y Frutos del Bosque con Nata', 'mousse-fresa-frutos-bosque', 'Mousse artesanal de fresa natural y frutos silvestres del bosque con nata montada.', 3.90, 'postres', true, false, ARRAY['lacteos'], 10),
+-- Productos: Bocadillos Gourmet
+INSERT INTO products (id, name, slug, description, price, category_id, is_active, is_available, is_featured, allergens, sort_order) VALUES
+('bokadi-serrano', 'Bokadi Serrano', 'bokadi-serrano', 'Pan rústico de 20cm al horno de piedra con AOVE, abundante jamón serrano selecto y pulpa de tomate natural con orégano y sal en escamas.', 8.90, 'bocadillos', true, true, true, ARRAY['gluten'], 1),
+('boka-mar', 'Boka - Mar', 'boka-mar', 'Pan rústico de 20cm con AOVE relleno de calamares crujientes a la romana, pimientos verdes al grill, sal gorda y suave alioli casero.', 10.50, 'bocadillos', true, true, true, ARRAY['gluten', 'moluscos', 'huevo'], 2),
+('bokadi-lomo', 'Bokadi Lomo', 'bokadi-lomo', 'Pan rústico de 20cm al horno de piedra con filetes de lomo tierno al grill, pimientos de padrón verdes fritos en AOVE y sal marina.', 9.90, 'bocadillos', true, true, true, ARRAY['gluten'], 3),
+('bokadi-pollo', 'Bokadi Pollo Crispy', 'bokadi-pollo', 'Pan rústico de 20cm con pechuga de pollo crujiente sureña, queso cheddar fundido, lechuga fresca, tomate y cebolla morada.', 10.50, 'bocadillos', true, true, true, ARRAY['gluten', 'lacteos'], 4),
+('bokadi-burger', 'Bokadi Burger Steak', 'bokadi-burger', 'Pan rústico de 20cm con tiras de ternera marinada al grill, queso gouda fundido, cebolla caramelizada, tomate y salsa de ajo suave.', 10.50, 'bocadillos', true, true, true, ARRAY['gluten', 'lacteos', 'huevo'], 5),
+('bokadi-bacon', 'Bokadi Bacon & Queso', 'bokadi-bacon', 'Pan rústico de 20cm con tiras gruesas de bacon ahumado crujiente y doble capa de queso fundido derretido.', 9.80, 'bocadillos', true, true, false, ARRAY['gluten', 'lacteos'], 6),
+('boka-atun', 'Boka - Atún Mediterráneo', 'boka-atun', 'Pan rústico de 20cm con atún claro de primera, jamón york, queso suave, finas rodajas de tomate, lechuga y cebolla.', 10.50, 'bocadillos', true, true, false, ARRAY['gluten', 'pescado', 'lacteos'], 7),
 
--- Bebidas Bio
-('bionade-limon', 'Bionade Limón (Bio)', 'bionade-limon', 'Refresco ecológico fermentado natural de limón 330ml.', 2.90, 'bebidas-eco', true, false, ARRAY[]::TEXT[], 11),
-('bionade-naranja', 'Bionade Orange (Bio)', 'bionade-naranja', 'Refresco ecológico fermentado natural de naranja 330ml.', 2.90, 'bebidas-eco', true, false, ARRAY[]::TEXT[], 12),
-('bionade-bergamota-lima', 'Bionade Bergamot / Lima (Bio)', 'bionade-bergamota-lima', 'Refresco ecológico fermentado natural de bergamota y lima 330ml.', 2.90, 'bebidas-eco', true, false, ARRAY[]::TEXT[], 13),
-('bionade-jengibre-naranja', 'Bionade Ginger / Orange (Bio)', 'bionade-jengibre-naranja', 'Refresco ecológico con jengibre y naranja 330ml.', 2.90, 'bebidas-eco', true, false, ARRAY[]::TEXT[], 14),
-('bionade-sauco', 'Bionade Edelberry / Saúco (Bio)', 'bionade-sauco', 'Refresco ecológico fermentado con flor de saúco 330ml.', 2.90, 'bebidas-eco', true, false, ARRAY[]::TEXT[], 15),
+-- Productos: Postres Artesanales en Tarrina
+('tiramisu-artesano', 'Tiramisú Artesano en Tarrina', 'tiramisu-artesano', 'Auténtico tiramisú italiano con bizcocho savoiardi bañado en espresso, crema de mascarpone y cacao puro en polvo.', 3.50, 'postres', true, true, true, ARRAY['lacteos', 'huevo', 'gluten'], 8),
+('mousse-chocolate-delivery', 'Mousse de Chocolate Belga', 'mousse-chocolate-delivery', 'Mousse cremosa de chocolate negro belga 70% con virutas de chocolate crujiente en tarrina individual sellada.', 3.50, 'postres', true, true, false, ARRAY['lacteos'], 9),
+('cheesecake-frutos-rojos', 'Cheesecake de Frutos Rojos', 'cheesecake-frutos-rojos', 'Tarta de queso suave sobre base crujiente de galleta con coulis artesano de frambuesas y arándanos silvestres.', 3.50, 'postres', true, true, false, ARRAY['lacteos', 'gluten'], 10),
 
--- Bebidas Tradicionales
-('coca-cola', 'Coca-Cola', 'coca-cola', 'Refresco clásico 330ml frío.', 2.80, 'bebidas-trad', true, false, ARRAY[]::TEXT[], 16),
-('fanta-naranja', 'Fanta Naranja', 'fanta-naranja', 'Refresco de naranja con gas 330ml frío.', 2.80, 'bebidas-trad', true, false, ARRAY[]::TEXT[], 17),
-('sprite', 'Sprite', 'sprite', 'Refresco lima-limón 330ml frío.', 2.80, 'bebidas-trad', true, false, ARRAY[]::TEXT[], 18),
+-- Subproductos: Refrescos Clásicos (Asociados a sub-refrescos)
+('coca-cola', 'Coca-Cola Original', 'coca-cola', 'Lata 330ml bien fría.', 2.20, 'bebidas', true, true, false, ARRAY[]::TEXT[], 11),
+('coca-cola-zero', 'Coca-Cola Zero', 'coca-cola-zero', 'Lata 330ml bien fría sin azúcar.', 2.20, 'bebidas', true, true, false, ARRAY[]::TEXT[], 12),
+('fanta-naranja', 'Fanta Naranja', 'fanta-naranja', 'Lata 330ml con gas y sabor a naranja.', 2.20, 'bebidas', true, true, false, ARRAY[]::TEXT[], 13),
+('sprite', 'Sprite', 'sprite', 'Lata 330ml lima-limón refrescante.', 2.20, 'bebidas', true, true, false, ARRAY[]::TEXT[], 14),
 
--- Cervezas
-('mahou', 'Mahou Clásica', 'mahou', 'Tercio Mahou 33cl bien frío.', 2.20, 'cervezas', true, false, ARRAY['gluten'], 19),
-('mahou-six-pack', 'Mahou Six-Pack (6 x 33cl)', 'mahou-six-pack', 'Pack ahorro de 6 botellas de Mahou 33cl.', 8.90, 'cervezas', true, false, ARRAY['gluten'], 20),
-('heineken', 'Heineken', 'heineken', 'Botella Heineken 33cl fría.', 2.90, 'cervezas', true, false, ARRAY['gluten'], 21),
-('paulaner-franziskaner', 'Paulaner / Franziskaner Trigo', 'paulaner-franziskaner', 'Cerveza alemana de trigo 50cl fría.', 3.90, 'cervezas', true, true, ARRAY['gluten'], 22)
+-- Subproductos: Cervezas Premium (Asociados a sub-cervezas)
+('mahou-clasica', 'Mahou Clásica (33cl)', 'mahou-clasica', 'Tercio 33cl bien frío.', 2.20, 'bebidas', true, true, false, ARRAY['gluten'], 15),
+('mahou-5-estrellas', 'Mahou 5 Estrellas (33cl)', 'mahou-5-estrellas', 'Cerveza especial rubia 33cl fría.', 2.50, 'bebidas', true, true, false, ARRAY['gluten'], 16),
+('heineken', 'Heineken (33cl)', 'heineken', 'Botella 33cl fría de cerveza premium.', 2.70, 'bebidas', true, true, false, ARRAY['gluten'], 17),
+('paulaner-trigo', 'Paulaner / Franziskaner Trigo (50cl)', 'paulaner-trigo', 'Cerveza alemana de trigo 50cl fría con cuerpo y aroma afrutado.', 3.90, 'bebidas', true, true, false, ARRAY['gluten'], 18),
+('pack-6-cervezas', 'Pack Ahorro 6 Cervezas (6 x 33cl)', 'pack-6-cervezas', 'Pack de 6 tercios de cerveza Mahou 33cl para compartir a domicilio.', 8.90, 'bebidas', true, true, false, ARRAY['gluten'], 19),
+
+-- Subproductos: Agua Mineral (Asociada a sub-aguas)
+('agua-mineral', 'Agua Mineral Natural', 'agua-mineral', 'Botella 500ml fría de manantial.', 1.50, 'bebidas', true, true, false, ARRAY[]::TEXT[], 20)
 ON CONFLICT (id) DO UPDATE SET
     name = EXCLUDED.name,
     price = EXCLUDED.price,
     description = EXCLUDED.description,
     category_id = EXCLUDED.category_id,
+    subcategory_id = EXCLUDED.subcategory_id,
     is_active = EXCLUDED.is_active,
+    is_available = EXCLUDED.is_available,
     allergens = EXCLUDED.allergens;
+
+-- Asignar subcategory_id a las bebidas correspondientes
+UPDATE products SET subcategory_id = 'sub-refrescos' WHERE id IN ('coca-cola', 'coca-cola-zero', 'fanta-naranja', 'sprite');
+UPDATE products SET subcategory_id = 'sub-cervezas' WHERE id IN ('mahou-clasica', 'mahou-5-estrellas', 'heineken', 'paulaner-trigo', 'pack-6-cervezas');
+UPDATE products SET subcategory_id = 'sub-aguas' WHERE id = 'agua-mineral';

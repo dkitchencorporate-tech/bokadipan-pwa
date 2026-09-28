@@ -112,20 +112,20 @@ export default function ProductCard({ product, onCustomize }: ProductCardProps) 
 
   return (
     <>
-      <div className={`group relative bg-white rounded-3xl border-2 overflow-hidden shadow-xl transition-all duration-300 flex flex-col ${
+      <div className={`group relative bg-white rounded-3xl border-2 overflow-hidden shadow-lg transition-all duration-300 flex flex-col ${
         !isAvailable 
-          ? 'opacity-60 grayscale-[35%] border-gray-300' 
-          : 'border-gray-200 hover:border-brand-primary/60 hover:shadow-[0_0_30px_rgba(245,158,11,0.2)]'
+          ? 'opacity-60 grayscale-[35%] border-[#E5DCD0]' 
+          : 'border-[#E5DCD0] hover:border-[#2D5A27] hover:shadow-[0_12px_35px_rgba(45,90,39,0.18)]'
       }`}>
         {/* Imagen */}
         <div 
           onClick={handleAdd}
-          className={`relative h-52 sm:h-56 overflow-hidden bg-brand-surface shrink-0 ${isAvailable ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+          className={`relative h-52 sm:h-56 overflow-hidden bg-[#FAF6F0] shrink-0 ${isAvailable ? 'cursor-pointer' : 'cursor-not-allowed'}`}
         >
           <img
             src={imageSrc}
             alt={product.name}
-            className={`w-full h-full object-cover transition-transform duration-700 ease-out ${isAvailable ? 'group-hover:scale-110' : ''}`}
+            className={`w-full h-full object-cover transition-transform duration-700 ease-out ${isAvailable ? 'group-hover:scale-105' : ''}`}
             loading="lazy"
             onError={(e) => {
               if (localStaticFallback && !e.currentTarget.src.endsWith(localStaticFallback)) {
@@ -135,7 +135,7 @@ export default function ProductCard({ product, onCustomize }: ProductCardProps) 
               }
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-70 group-hover:opacity-90 transition-opacity"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-70 group-hover:opacity-85 transition-opacity"></div>
           {/* Badge / Tag visible sobre la foto */}
           {!isAvailable ? (
             <span className="absolute top-3 left-3 z-20 bg-zinc-900/90 text-white border-2 border-zinc-700 font-display font-black text-[10px] sm:text-xs uppercase tracking-wider px-3 py-1.5 rounded-xl shadow-lg leading-none">
@@ -147,7 +147,7 @@ export default function ProductCard({ product, onCustomize }: ProductCardProps) 
             const badgeText = (lang === 'en' && (product as any).badge_en) ? (product as any).badge_en : tDynamic(rawBadge);
             const isSpicy = /pic|spicy|hot|chipotle/i.test(rawBadge);
             return (
-              <span className={`absolute top-3 left-3 z-20 bg-white/95 backdrop-blur-sm border-2 font-display font-black text-[10px] sm:text-xs uppercase tracking-wider px-3 py-1.5 rounded-xl shadow-lg leading-none ${isSpicy ? 'border-red-500 text-red-600' : 'border-brand-primary text-brand-ink'}`}>
+              <span className={`absolute top-3 left-3 z-20 bg-white/95 backdrop-blur-sm border-2 font-display font-black text-[10px] sm:text-xs uppercase tracking-wider px-3 py-1.5 rounded-xl shadow-md leading-none ${isSpicy ? 'border-red-500 text-red-600' : 'border-[#2D5A27] text-[#1A201A]'}`}>
                 {badgeText}
               </span>
             );
@@ -155,20 +155,20 @@ export default function ProductCard({ product, onCustomize }: ProductCardProps) 
 
           {/* Precio */}
           {!product.isGroup ? (
-            <span className="absolute bottom-3 right-3 z-20 bg-brand-primary border-2 border-white text-white font-display font-black text-lg sm:text-xl px-4 py-1.5 rounded-xl shadow-lg leading-none whitespace-nowrap">
+            <span className="absolute bottom-3 right-3 z-20 bg-[#2D5A27] border-2 border-white text-white font-display font-black text-lg sm:text-xl px-4 py-1.5 rounded-xl shadow-lg leading-none whitespace-nowrap">
               {(product.price || 0).toFixed(2).replace('.', ',')}&nbsp;€
             </span>
           ) : (
-            <span className="absolute bottom-3 right-3 z-20 bg-white/95 border-2 border-brand-border text-brand-ink font-display font-bold text-xs sm:text-sm px-3 py-1.5 rounded-xl shadow-lg whitespace-nowrap">
+            <span className="absolute bottom-3 right-3 z-20 bg-white/95 border-2 border-[#E5DCD0] text-[#1A201A] font-display font-black text-xs sm:text-sm px-3.5 py-1.5 rounded-xl shadow-md whitespace-nowrap">
               {t('from')} {(product.price || 0).toFixed(2).replace('.', ',')}&nbsp;€
             </span>
           )}
         </div>
 
-        <div className="p-5 flex flex-col flex-1 gap-3">
+        <div className="p-5 flex flex-col flex-1 gap-3 bg-[#FFFFFF]">
           <div className={`flex-1 ${isAvailable ? 'cursor-pointer' : 'cursor-not-allowed'}`} onClick={handleAdd}>
             <h3 className={`font-display font-black text-lg sm:text-xl uppercase tracking-wide leading-tight transition-colors ${
-              isAvailable ? 'text-brand-ink group-hover:text-brand-primaryHover' : 'text-zinc-500'
+              isAvailable ? 'text-[#1A201A] group-hover:text-[#2D5A27]' : 'text-zinc-500'
             }`}>
               {displayName}
             </h3>
@@ -179,10 +179,10 @@ export default function ProductCard({ product, onCustomize }: ProductCardProps) 
           <button
             onClick={handleAdd}
             disabled={!isAvailable}
-            className={`w-full font-display font-black py-3.5 rounded-2xl text-xs sm:text-sm uppercase tracking-wider transition-all shadow-lg flex items-center justify-center gap-2 ${
+            className={`w-full font-display font-black py-3.5 rounded-2xl text-xs sm:text-sm uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 ${
               !isAvailable
                 ? 'bg-zinc-200 text-zinc-400 cursor-not-allowed shadow-none'
-                : 'bg-gradient-to-r from-brand-primary to-brand-primaryHover hover:brightness-110 text-white hover:shadow-[0_10px_25px_-5px_rgba(245,158,11,0.4)] active:scale-95'
+                : 'bg-[#2D5A27] hover:bg-[#1E3D1A] text-white hover:shadow-[0_8px_20px_rgba(45,90,39,0.35)] active:scale-95 border border-[#4D7C0F]'
             }`}
           >
             {product.isGroup ? (

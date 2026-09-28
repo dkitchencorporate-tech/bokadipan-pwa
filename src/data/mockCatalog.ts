@@ -18,21 +18,48 @@ export const BOKADIPAN_CATEGORIES = [
     is_active: true
   },
   {
-    id: "refrescos",
-    name: "Refrescos & Aguas",
-    name_en: "Cold Drinks",
-    description: "Refrescos clásicos fríos en lata 330ml y agua mineral.",
+    id: "bebidas",
+    name: "Bebidas & Cervezas Frías",
+    name_en: "Cold Drinks & Beers",
+    description: "Refrescos fríos en lata 330ml, cervezas nacionales/importación y agua mineral.",
     icon: "GlassWater",
     sort_order: 3,
     is_active: true
+  }
+];
+
+export const BOKADIPAN_SUBCATEGORIES = [
+  {
+    id: "sub-refrescos",
+    category_id: "bebidas",
+    name: "Refrescos Clásicos (33cl)",
+    name_en: "Cold Soft Drinks (33cl)",
+    description: "Lata 330ml servida bien fría (Coca-Cola, Zero, Fanta, Sprite).",
+    description_en: "330ml can served ice cold (Coca-Cola, Zero, Fanta, Sprite).",
+    image_url: "/assets/products/refrescos-clasicos.jpg",
+    sort_order: 1,
+    is_active: true
   },
   {
-    id: "cervezas",
-    name: "Cervezas Frías",
-    name_en: "Cold Beers",
-    description: "Cervezas nacionales y de importación en botella fría.",
-    icon: "Beer",
-    sort_order: 4,
+    id: "sub-cervezas",
+    category_id: "bebidas",
+    name: "Cervezas Premium (33cl)",
+    name_en: "Cold Craft & Premium Beers",
+    description: "Cervezas nacionales y de importación en botella o tercio frío.",
+    description_en: "National and imported cold beer bottles.",
+    image_url: "/assets/products/cervezas-premium.jpg",
+    sort_order: 2,
+    is_active: true
+  },
+  {
+    id: "sub-aguas",
+    category_id: "bebidas",
+    name: "Agua Mineral (50cl)",
+    name_en: "Mineral Water (50cl)",
+    description: "Botella 500ml fría de manantial natural.",
+    description_en: "500ml natural spring cold water bottle.",
+    image_url: "/assets/products/agua-mineral.jpg",
+    sort_order: 3,
     is_active: true
   }
 ];
@@ -222,169 +249,151 @@ export const BOKADIPAN_PRODUCTS = [
     sort_order: 10
   },
 
-  // 🥤 3. REFRESCOS & AGUAS (330ml / 500ml)
+  // 🥤 3. SUBPRODUCTOS: REFRESCOS (Subcategoría: sub-refrescos)
   {
     id: "coca-cola",
     name: "Coca-Cola Original",
     slug: "coca-cola",
-    category_id: "refrescos",
-    category: "refrescos",
+    category_id: "bebidas",
+    subcategory_id: "sub-refrescos",
+    category: "bebidas",
     description: "Lata 330ml bien fría.",
     price: 2.20,
-    image_url: "/assets/products/refrescos-clasicos.jpg",
-    img_url: "/assets/products/refrescos-clasicos.jpg",
-    img: "/assets/products/refrescos-clasicos.jpg",
     badge: "🥤 FRÍO",
     is_available: true,
     is_active: true,
-    sort_order: 11
+    sort_order: 1
   },
   {
     id: "coca-cola-zero",
     name: "Coca-Cola Zero",
     slug: "coca-cola-zero",
-    category_id: "refrescos",
-    category: "refrescos",
+    category_id: "bebidas",
+    subcategory_id: "sub-refrescos",
+    category: "bebidas",
     description: "Lata 330ml bien fría sin azúcar.",
     price: 2.20,
-    image_url: "/assets/products/refrescos-clasicos.jpg",
-    img_url: "/assets/products/refrescos-clasicos.jpg",
-    img: "/assets/products/refrescos-clasicos.jpg",
     badge: "🥤 ZERO",
     is_available: true,
     is_active: true,
-    sort_order: 12
+    sort_order: 2
   },
   {
     id: "fanta-naranja",
     name: "Fanta Naranja",
     slug: "fanta-naranja",
-    category_id: "refrescos",
-    category: "refrescos",
+    category_id: "bebidas",
+    subcategory_id: "sub-refrescos",
+    category: "bebidas",
     description: "Lata 330ml con gas y sabor a naranja.",
     price: 2.20,
-    image_url: "/assets/products/refrescos-clasicos.jpg",
-    img_url: "/assets/products/refrescos-clasicos.jpg",
-    img: "/assets/products/refrescos-clasicos.jpg",
     is_available: true,
     is_active: true,
-    sort_order: 13
+    sort_order: 3
   },
   {
     id: "sprite",
     name: "Sprite",
     slug: "sprite",
-    category_id: "refrescos",
-    category: "refrescos",
+    category_id: "bebidas",
+    subcategory_id: "sub-refrescos",
+    category: "bebidas",
     description: "Lata 330ml lima-limón refrescante.",
     price: 2.20,
-    image_url: "/assets/products/refrescos-clasicos.jpg",
-    img_url: "/assets/products/refrescos-clasicos.jpg",
-    img: "/assets/products/refrescos-clasicos.jpg",
     is_available: true,
     is_active: true,
-    sort_order: 14
-  },
-  {
-    id: "agua-mineral",
-    name: "Agua Mineral Natural",
-    slug: "agua-mineral",
-    category_id: "refrescos",
-    category: "refrescos",
-    description: "Botella 500ml fría de manantial.",
-    price: 1.50,
-    image_url: "/assets/products/agua-mineral.jpg",
-    img_url: "/assets/products/agua-mineral.jpg",
-    img: "/assets/products/agua-mineral.jpg",
-    badge: "💧 PURA",
-    is_available: true,
-    is_active: true,
-    sort_order: 15
+    sort_order: 4
   },
 
-  // 🍺 4. CERVEZAS FRÍAS
+  // 🍺 4. SUBPRODUCTOS: CERVEZAS (Subcategoría: sub-cervezas)
   {
     id: "mahou-clasica",
     name: "Mahou Clásica (33cl)",
     slug: "mahou-clasica",
-    category_id: "cervezas",
-    category: "cervezas",
+    category_id: "bebidas",
+    subcategory_id: "sub-cervezas",
+    category: "bebidas",
     description: "Tercio 33cl bien frío.",
     price: 2.20,
-    image_url: "/assets/products/cervezas-premium.jpg",
-    img_url: "/assets/products/cervezas-premium.jpg",
-    img: "/assets/products/cervezas-premium.jpg",
     badge: "🍺 FRÍA",
     is_available: true,
     is_active: true,
     allergens: ["gluten"],
-    sort_order: 16
+    sort_order: 1
   },
   {
     id: "mahou-5-estrellas",
     name: "Mahou 5 Estrellas (33cl)",
     slug: "mahou-5-estrellas",
-    category_id: "cervezas",
-    category: "cervezas",
+    category_id: "bebidas",
+    subcategory_id: "sub-cervezas",
+    category: "bebidas",
     description: "Cerveza especial rubia 33cl fría.",
     price: 2.50,
-    image_url: "/assets/products/cervezas-premium.jpg",
-    img_url: "/assets/products/cervezas-premium.jpg",
-    img: "/assets/products/cervezas-premium.jpg",
     badge: "⭐ ESPECIAL",
     is_available: true,
     is_active: true,
     allergens: ["gluten"],
-    sort_order: 17
+    sort_order: 2
   },
   {
     id: "heineken",
     name: "Heineken (33cl)",
     slug: "heineken",
-    category_id: "cervezas",
-    category: "cervezas",
+    category_id: "bebidas",
+    subcategory_id: "sub-cervezas",
+    category: "bebidas",
     description: "Botella 33cl fría de cerveza premium.",
     price: 2.70,
-    image_url: "/assets/products/cervezas-premium.jpg",
-    img_url: "/assets/products/cervezas-premium.jpg",
-    img: "/assets/products/cervezas-premium.jpg",
     is_available: true,
     is_active: true,
     allergens: ["gluten"],
-    sort_order: 18
+    sort_order: 3
   },
   {
     id: "paulaner-trigo",
     name: "Paulaner / Franziskaner Trigo (50cl)",
     slug: "paulaner-trigo",
-    category_id: "cervezas",
-    category: "cervezas",
+    category_id: "bebidas",
+    subcategory_id: "sub-cervezas",
+    category: "bebidas",
     description: "Cerveza alemana de trigo 50cl fría con cuerpo y aroma afrutado.",
     price: 3.90,
-    image_url: "/assets/products/cervezas-premium.jpg",
-    img_url: "/assets/products/cervezas-premium.jpg",
-    img: "/assets/products/cervezas-premium.jpg",
     badge: "🌾 TRIGO 50CL",
     is_available: true,
     is_active: true,
     allergens: ["gluten"],
-    sort_order: 19
+    sort_order: 4
   },
   {
     id: "pack-6-cervezas",
     name: "Pack Ahorro 6 Cervezas (6 x 33cl)",
     slug: "pack-6-cervezas",
-    category_id: "cervezas",
-    category: "cervezas",
+    category_id: "bebidas",
+    subcategory_id: "sub-cervezas",
+    category: "bebidas",
     description: "Pack de 6 tercios de cerveza Mahou 33cl para compartir a domicilio.",
     price: 8.90,
-    image_url: "/assets/products/cervezas-premium.jpg",
-    img_url: "/assets/products/cervezas-premium.jpg",
-    img: "/assets/products/cervezas-premium.jpg",
     badge: "📦 PACK AHORRO",
     is_available: true,
     is_active: true,
     allergens: ["gluten"],
-    sort_order: 20
+    sort_order: 5
+  },
+
+  // 💧 5. SUBPRODUCTOS: AGUAS (Subcategoría: sub-aguas)
+  {
+    id: "agua-mineral",
+    name: "Agua Mineral Natural",
+    slug: "agua-mineral",
+    category_id: "bebidas",
+    subcategory_id: "sub-aguas",
+    category: "bebidas",
+    description: "Botella 500ml fría de manantial.",
+    price: 1.50,
+    badge: "💧 PURA",
+    is_available: true,
+    is_active: true,
+    sort_order: 1
   }
 ];

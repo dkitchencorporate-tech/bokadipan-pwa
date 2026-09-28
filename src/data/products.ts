@@ -33,37 +33,66 @@ export interface Product {
 }
 
 export const LOCAL_IMAGE_MAP: Record<string, string> = {
+    // Bocadillos Rústicos Gourmet (Fotos Macro de Autor)
     'Bokadi Serrano': '/assets/products/bokadi_serrano.jpg',
     'Boka - Mar': '/assets/products/boka_mar.jpg',
     'Boka - Atún': '/assets/products/boka_atun.jpg',
+    'Boka - Atún Mediterráneo': '/assets/products/boka_atun.jpg',
     'Bokadi Bacon': '/assets/products/bokadi_bacon.jpg',
+    'Bokadi Bacon & Queso': '/assets/products/bokadi_bacon.jpg',
     'Bokadi Lomo': '/assets/products/bokadi_lomo.jpg',
     'Bokadi Pollo': '/assets/products/bokadi_pollo.jpg',
+    'Bokadi Pollo Crispy': '/assets/products/bokadi_pollo.jpg',
     'Bokadi Burger': '/assets/products/bokadi_burger.jpg',
-    'Mousse de Chocolate y Fresas con Nata': '/assets/products/mousse_artesanal.jpg',
-    'Mousse de Vainilla y Chocolate con Nata': '/assets/products/mousse_artesanal.jpg',
-    'Mousse de Fresa y Frutos del Bosque con Nata': '/assets/products/mousse_artesanal.jpg',
-    'Bionade Limón (Bio)': '/assets/products/bionade_eco_drinks.jpg',
-    'Bionade Orange (Bio)': '/assets/products/bionade_eco_drinks.jpg',
-    'Bionade Bergamot / Lima (Bio)': '/assets/products/bionade_eco_drinks.jpg',
-    'Bionade Ginger / Orange (Bio)': '/assets/products/bionade_eco_drinks.jpg',
-    'Bionade Edelberry / Saúco (Bio)': '/assets/products/bionade_eco_drinks.jpg',
-    'Coca-Cola': '/assets/products/bokadi_serrano.jpg',
-    'Fanta Naranja': '/assets/products/bokadi_pollo.jpg',
-    'Sprite': '/assets/products/boka_mar.jpg',
-    'Mahou Clásica': '/assets/products/bokadi_lomo.jpg',
-    'Mahou Six-Pack (6 x 33cl)': '/assets/products/bokadi_lomo.jpg',
-    'Heineken': '/assets/products/boka_atun.jpg',
-    'Paulaner / Franziskaner Trigo': '/assets/products/bokadi_serrano.jpg'
+    'Bokadi Burger Steak': '/assets/products/bokadi_burger.jpg',
+
+    // Postres Artesanales en Tarrina Delivery
+    'Tiramisú Artesano en Tarrina': '/assets/products/cheesecake.jpg',
+    'Tiramisú Artesano': '/assets/products/cheesecake.jpg',
+    'Mousse de Chocolate Belga': '/assets/products/brownie-bites.jpg',
+    'Mousse de Chocolate y Fresas con Nata': '/assets/products/brownie-bites.jpg',
+    'Cheesecake de Frutos Rojos': '/assets/products/cheesecake.jpg',
+    'Cheesecake': '/assets/products/cheesecake.jpg',
+
+    // Subcategorías de Bebidas Agrupadas (1 sola tarjeta con imagen que abre el modal)
+    'Refrescos Clásicos (33cl)': '/assets/products/refrescos-clasicos.jpg',
+    'Refrescos Clásicos': '/assets/products/refrescos-clasicos.jpg',
+    'REFRESCOS': '/assets/products/refrescos-clasicos.jpg',
+    'Refrescos & Aguas': '/assets/products/refrescos-clasicos.jpg',
+    'Cervezas Premium (33cl)': '/assets/products/cervezas-premium.jpg',
+    'Cervezas Premium': '/assets/products/cervezas-premium.jpg',
+    'CERVEZAS': '/assets/products/cervezas-premium.jpg',
+    'Cervezas Frías': '/assets/products/cervezas-premium.jpg',
+    'Agua Mineral (50cl)': '/assets/products/agua-mineral.jpg',
+    'Agua Mineral': '/assets/products/agua-mineral.jpg',
+    'AGUAS': '/assets/products/agua-mineral.jpg',
+
+    // Bebidas individuales (por si se renderizan directamente)
+    'Coca-Cola Original': '/assets/products/refrescos-clasicos.jpg',
+    'Coca-Cola Zero': '/assets/products/refrescos-clasicos.jpg',
+    'Coca-Cola': '/assets/products/refrescos-clasicos.jpg',
+    'Fanta Naranja': '/assets/products/refrescos-clasicos.jpg',
+    'Sprite': '/assets/products/refrescos-clasicos.jpg',
+    'Agua Mineral Natural': '/assets/products/agua-mineral.jpg',
+    'Mahou Clásica (33cl)': '/assets/products/cervezas-premium.jpg',
+    'Mahou Clásica': '/assets/products/cervezas-premium.jpg',
+    'Mahou 5 Estrellas (33cl)': '/assets/products/cervezas-premium.jpg',
+    'Mahou 5 Estrellas': '/assets/products/cervezas-premium.jpg',
+    'Mahou Six-Pack (6 x 33cl)': '/assets/products/cervezas-premium.jpg',
+    'Pack Ahorro 6 Cervezas (6 x 33cl)': '/assets/products/cervezas-premium.jpg',
+    'Heineken (33cl)': '/assets/products/cervezas-premium.jpg',
+    'Heineken': '/assets/products/cervezas-premium.jpg',
+    'Paulaner / Franziskaner Trigo (50cl)': '/assets/products/cervezas-premium.jpg',
+    'Paulaner / Franziskaner Trigo': '/assets/products/cervezas-premium.jpg'
 };
 
 export function getProductImageUrl(product?: { name?: string; image_url?: string | null; img_url?: string | null; img?: string | null } | null): string {
-    if (!product) return '/assets/products/bokadi_serrano.jpg';
+    if (!product) return BRAND_CONFIG.assets.placeholderProductUrl || '/assets/products/bokadi_serrano.jpg';
     if (product.name && LOCAL_IMAGE_MAP[product.name]) return LOCAL_IMAGE_MAP[product.name];
     if (product.image_url) return product.image_url;
     if (product.img_url) return product.img_url;
     if (product.img) return product.img;
-    return '/assets/products/bokadi_serrano.jpg';
+    return BRAND_CONFIG.assets.placeholderProductUrl || '/assets/products/bokadi_serrano.jpg';
 }
 
 export interface UpsellItem {

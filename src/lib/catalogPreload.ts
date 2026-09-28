@@ -1,5 +1,5 @@
 import { api } from './apiClient';
-import { BOKADIPAN_CATEGORIES, BOKADIPAN_PRODUCTS } from '../data/mockCatalog';
+import { BOKADIPAN_CATEGORIES, BOKADIPAN_SUBCATEGORIES, BOKADIPAN_PRODUCTS } from '../data/mockCatalog';
 
 // Precarga del catálogo (categorías, subcategorías, productos, ajustes de
 // tienda y horarios) para que arranque EN PARALELO con el preloader/splash.
@@ -23,10 +23,11 @@ export function preloadCatalogData(): Promise<CatalogData> {
     .then((data) => {
       const hasCategories = Array.isArray(data?.categories) && data.categories.length > 0;
       const hasProducts = Array.isArray(data?.products) && data.products.length > 0;
+      const hasSubcategories = Array.isArray(data?.subcategories) && data.subcategories.length > 0;
 
       cachedData = {
         categories: hasCategories ? data.categories : BOKADIPAN_CATEGORIES,
-        subcategories: data?.subcategories || [],
+        subcategories: hasSubcategories ? data.subcategories : BOKADIPAN_SUBCATEGORIES,
         products: hasProducts ? data.products : BOKADIPAN_PRODUCTS,
         settings: data?.settings || { is_open: true, delivery_enabled: true },
         hours: data?.hours || []
@@ -37,7 +38,7 @@ export function preloadCatalogData(): Promise<CatalogData> {
       // Fallback a catálogo semilla de BOKADIPAN si la BD aún no está disponible
       cachedData = {
         categories: BOKADIPAN_CATEGORIES,
-        subcategories: [],
+        subcategories: BOKADIPAN_SUBCATEGORIES,
         products: BOKADIPAN_PRODUCTS,
         settings: { is_open: true, delivery_enabled: true },
         hours: []

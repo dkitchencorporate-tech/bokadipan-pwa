@@ -3,17 +3,68 @@
 @tailwind utilities;
 
 :root {
-  --brand-primary: #18181B;
-  --brand-primary-hover: #27272A;
-  --brand-primary-light: #F4F4F5;
-  --brand-accent: #52525B;
-  --brand-accent-hover: #3F3F46;
-  --brand-surface: #FAFAFA;
+  --brand-primary: #2D5A27;
+  --brand-primary-hover: #1E3D1A;
+  --brand-primary-light: #EAF2E8;
+  --brand-accent: #B45309;
+  --brand-accent-hover: #92400E;
+  --brand-surface: #FAF6F0;
   --brand-card: #FFFFFF;
-  --brand-card-hover: #F4F4F5;
-  --brand-ink: #18181B;
-  --brand-ink-soft: #71717A;
-  --brand-border: #E4E4E7;
+  --brand-card-hover: #FDFBF7;
+  --brand-ink: #1A201A;
+  --brand-ink-soft: #5C6B5C;
+  --brand-border: #E5DCD0;
+}
+
+body {
+  background-color: var(--brand-surface);
+  color: var(--brand-ink);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Scrollbar estilo rústico obrador artesanal */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F3ECE2;
+}
+::-webkit-scrollbar-thumb {
+  background: #C4B5A2;
+  border-radius: 9999px;
+  border: 2px solid #F3ECE2;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #B45309;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Category pill rústico */
+.category-pill {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  background: #FFFFFF;
+  color: #5C6B5C;
+  border: 2px solid #E5DCD0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+.category-pill:hover {
+  border-color: #2D5A27;
+  color: #2D5A27;
+  background: #FAF6F0;
+}
+.category-pill.active {
+  background: #2D5A27;
+  color: #FFFFFF;
+  border-color: #2D5A27;
+  box-shadow: 0 6px 18px rgba(45, 90, 39, 0.35);
 }
 
 @keyframes fadeIn {

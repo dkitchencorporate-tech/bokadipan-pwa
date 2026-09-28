@@ -10,8 +10,10 @@
 ## 1. ESTADO ACTUAL REAL (28 de Septiembre de 2026)
 
 * **Marca:** BOKADIPAN — Bocadillos de Pan Rústico al Horno de Piedra con AOVE.
+* **URL Pública en Producción:** [`https://bokadipan-pwa.vercel.app`](https://bokadipan-pwa.vercel.app)
+* **Repositorio Oficial en GitHub:** [`dkitchencorporate-tech/bokadipan-pwa`](https://github.com/dkitchencorporate-tech/bokadipan-pwa) (rama `main`)
 * **Identidad Visual:** Mediterráneo Orgánico (Fondo Marfil Cálido `#FDFBF7`, Verde Oliva `#4D7C0F`, Dorado Ámbar `#D97706`, Texto Grafito `#1E293B`).
-* **Subdominio / URL Objetivo:** `bokadipan.dkitchencorporate.es`
+* **Subdominio Corporativo DNS:** `bokadipan.dkitchencorporate.es` (CNAME `cname.vercel-dns.com`)
 * **Catálogo Integrado & Estrategia de Precios Optimizada:**
   - 7 Bocadillos Rústicos Gourmet (20cm) con ración de picoteo y bebida incluida (9,90€ a 11,90€).
   - 3 Mousses Artesanales en Vaso (3,90€).
@@ -27,7 +29,7 @@
 
 ## 2. HISTORIAL COMPACTADO DE HITOS PREVIOS
 
-* **28-sep-2026 (v1.0.0):** Creación e instanciación de BOKADIPAN PWA desde el motor White-Label v3.1, adaptación de marca, paleta Mediterráneo Orgánico, catálogo completo y esquema SQL blindado.
+* **28-sep-2026 (v1.0.0):** Despliegue productivo exitoso en Vercel (`https://bokadipan-pwa.vercel.app`), resolución de sintaxis JSX, publicación en GitHub y configuración de base de datos e identidad Mediterráneo Orgánico.
 
 ---
 

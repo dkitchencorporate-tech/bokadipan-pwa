@@ -53,20 +53,11 @@ export default function AdminDashboard() {
   // Admin Auth State
   const [adminEmail, setAdminEmail] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
-  const [adminTotpCode, setAdminTotpCode] = useState('');
-  const [authStep, setAuthStep] = useState<'credentials' | '2fa'>('credentials');
   const [adminLoading, setAdminLoading] = useState(false);
   const [adminError, setAdminError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
-  const [showCreateAdminModal, setShowCreateAdminModal] = useState(false);
-  const [newAdminName, setNewAdminName] = useState('');
-  const [newAdminEmail, setNewAdminEmail] = useState('');
-  const [newAdminPassword, setNewAdminPassword] = useState('');
-  const [masterKey, setMasterKey] = useState('');
-  const [createAdminMsg, setCreateAdminMsg] = useState<{ text: string; error?: boolean } | null>(null);
-  const [isCreatingAdmin, setIsCreatingAdmin] = useState(false);
 
   useEffect(() => {
     // Update store schedule status periodically
@@ -132,25 +123,9 @@ export default function AdminDashboard() {
     setAdminLoading(true);
     setAdminError('');
     try {
-      const res = await signIn(adminEmail.trim(), adminPassword);
-      if (res && res.requires_2fa) {
-        setAuthStep('2fa');
-      }
+      await signIn(adminEmail.trim(), adminPassword);
     } catch (err: any) {
       setAdminError(err.message || t('login_error'));
-    } finally {
-      setAdminLoading(false);
-    }
-  };
-
-  const handleVerify2FA = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setAdminLoading(true);
-    setAdminError('');
-    try {
-      await verify2FA(adminEmail.trim(), adminTotpCode.trim());
-    } catch (err: any) {
-      setAdminError(err.message || 'Código de seguridad incorrecto o expirado.');
     } finally {
       setAdminLoading(false);
     }
@@ -161,32 +136,7 @@ export default function AdminDashboard() {
       setAdminError(t('enter_email_to_reset'));
       return;
     }
-    setAdminError('Para restablecer credenciales de administración, contacta con el equipo técnico de D-Kitchen Corporate.');
-  };
-
-  const handleCreateAdminSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsCreatingAdmin(true);
-    setCreateAdminMsg(null);
-    try {
-      await api.post('/account?action=create-admin', {
-        full_name: newAdminName.trim(),
-        email: newAdminEmail.trim(),
-        password: newAdminPassword,
-        masterKey: masterKey.trim() || '202600'
-      });
-      setCreateAdminMsg({ text: '¡Administrador creado con éxito! Ya puedes iniciar sesión.', error: false });
-      setAdminEmail(newAdminEmail.trim());
-      setAdminPassword(newAdminPassword);
-      setTimeout(() => {
-        setShowCreateAdminModal(false);
-        setCreateAdminMsg(null);
-      }, 1800);
-    } catch (err: any) {
-      setCreateAdminMsg({ text: err.message || 'Error al registrar administrador', error: true });
-    } finally {
-      setIsCreatingAdmin(false);
-    }
+    setAdminError('Para restablecer credenciales de administración, contacta con la gerencia de D-Kitchen Corporate.');
   };
 
   // ----------------------------------------------------
@@ -212,255 +162,93 @@ export default function AdminDashboard() {
               Portal de Gestión & Obrador
             </div>
             <p className="text-xs text-[#5C5549] mt-2 font-medium">
-              {authStep === 'credentials' 
-                ? 'Acceso exclusivo para administradores y personal de cocina' 
-                : 'Verificación de dos factores (2FA TOTP)'}
+              Acceso exclusivo para administradores y personal de cocina
             </p>
           </div>
 
-          {authStep === 'credentials' ? (
-            <form onSubmit={handleAdminLogin} className="space-y-4">
-              {adminError && (
-                <div className="bg-rose-50 border border-rose-200 text-rose-700 p-3.5 rounded-xl text-xs text-center font-bold">
-                  {adminError}
-                </div>
-              )}
-              
-              <div>
-                <label className="block text-[11px] font-black text-[#1B3818] uppercase tracking-wider mb-1.5">
-                  Correo Electrónico de Administrador
-                </label>
+          <form onSubmit={handleAdminLogin} className="space-y-4">
+            {adminError && (
+              <div className="bg-rose-50 border border-rose-200 text-rose-700 p-3.5 rounded-xl text-xs text-center font-bold">
+                {adminError}
+              </div>
+            )}
+            
+            <div>
+              <label className="block text-[11px] font-black text-[#1B3818] uppercase tracking-wider mb-1.5">
+                Correo Electrónico de Administrador
+              </label>
+              <input 
+                type="email" 
+                value={adminEmail}
+                onChange={e => setAdminEmail(e.target.value)}
+                required
+                className="w-full bg-[#FAF7F2] border border-[#DFD3C1] focus:border-[#1B3818] focus:ring-2 focus:ring-[#1B3818]/20 rounded-xl px-4 py-3 text-[#141A14] text-sm transition-all outline-none placeholder:text-stone-400 font-medium"
+                placeholder="ejemplo@restaurante.es"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-[11px] font-black text-[#1B3818] uppercase tracking-wider mb-1.5">
+                Contraseña Maestra
+              </label>
+              <div className="relative flex items-center w-full">
                 <input 
-                  type="email" 
-                  value={adminEmail}
-                  onChange={e => setAdminEmail(e.target.value)}
+                  type={showPassword ? "text" : "password"} 
+                  value={adminPassword}
+                  onChange={e => setAdminPassword(e.target.value)}
                   required
-                  className="w-full bg-[#FAF7F2] border border-[#DFD3C1] focus:border-[#1B3818] focus:ring-2 focus:ring-[#1B3818]/20 rounded-xl px-4 py-3 text-[#141A14] text-sm transition-all outline-none placeholder:text-stone-400 font-medium"
-                  placeholder="dkitchen@dkitchencorporate.es"
+                  className="w-full bg-[#FAF7F2] border border-[#DFD3C1] focus:border-[#1B3818] focus:ring-2 focus:ring-[#1B3818]/20 rounded-xl pl-4 pr-12 py-3 text-[#141A14] text-sm transition-all outline-none placeholder:text-stone-400 font-medium"
+                  placeholder="••••••••"
                 />
-              </div>
-              
-              <div>
-                <label className="block text-[11px] font-black text-[#1B3818] uppercase tracking-wider mb-1.5">
-                  Contraseña Maestra
-                </label>
-                <div className="relative w-full">
-                  <input 
-                    type={showPassword ? "text" : "password"} 
-                    value={adminPassword}
-                    onChange={e => setAdminPassword(e.target.value)}
-                    required
-                    className="w-full bg-[#FAF7F2] border border-[#DFD3C1] focus:border-[#1B3818] focus:ring-2 focus:ring-[#1B3818]/20 rounded-xl px-4 py-3 pr-12 text-[#141A14] text-sm transition-all outline-none placeholder:text-stone-400 font-medium"
-                    placeholder="••••••••"
-                  />
-                  <button 
-                    type="button" 
-                    onClick={() => setShowPassword(!showPassword)} 
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-[#1B3818] p-2 transition-colors"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      {showPassword ? (
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                      ) : (
-                        <>
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </>
-                      )}
-                    </svg>
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between pt-1">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input 
-                    type="checkbox" 
-                    checked={rememberMe} 
-                    onChange={e => setRememberMe(e.target.checked)} 
-                    className="w-4 h-4 rounded border-[#DFD3C1] text-[#1B3818] bg-[#FAF7F2] focus:ring-[#1B3818]" 
-                  />
-                  <span className="text-xs text-[#5C5549] font-medium">Recordar sesión</span>
-                </label>
                 <button 
                   type="button" 
-                  onClick={handleResetPassword} 
-                  disabled={isResetting || !adminEmail} 
-                  className="text-xs text-[#C88A35] hover:text-[#9C5B18] font-bold transition-colors disabled:opacity-50"
+                  onClick={() => setShowPassword(!showPassword)} 
+                  aria-label={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-stone-400 hover:text-[#1B3818] rounded-lg transition-colors cursor-pointer"
                 >
-                  ¿Olvidaste la clave?
-                </button>
-              </div>
-
-              <button 
-                type="submit"
-                disabled={adminLoading}
-                className="w-full bg-[#1B3818] hover:bg-[#264B22] text-[#F8F4EC] font-display font-extrabold py-3.5 px-4 rounded-xl uppercase tracking-wider transition-all mt-3 disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg text-xs cursor-pointer border border-[#C88A35]/30"
-              >
-                {adminLoading ? 'Comprobando credenciales...' : 'Continuar al Panel'}
-              </button>
-
-              <div className="pt-4 border-t border-[#DFD3C1]/60 text-center">
-                <button
-                  type="button"
-                  onClick={() => { setShowCreateAdminModal(true); setCreateAdminMsg(null); }}
-                  className="text-xs text-[#1B3818] hover:text-[#C88A35] font-black uppercase tracking-wider transition-colors inline-flex items-center gap-1.5 cursor-pointer"
-                >
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>
-                  Crear / Registrar Nuevo Administrador
-                </button>
-              </div>
-            </form>
-          ) : (
-            <form onSubmit={handleVerify2FA} className="space-y-4">
-              {adminError && (
-                <div className="bg-rose-50 border border-rose-200 text-rose-700 p-3.5 rounded-xl text-xs text-center font-bold">
-                  {adminError}
-                </div>
-              )}
-
-              <div className="bg-[#FAF7F2] border border-[#DFD3C1] p-4 rounded-2xl text-center">
-                <div className="w-12 h-12 bg-[#1B3818] text-[#C88A35] rounded-xl flex items-center justify-center mx-auto mb-2 shadow-md">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    {showPassword ? (
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                    ) : (
+                      <>
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </>
+                    )}
                   </svg>
-                </div>
-                <p className="text-xs text-[#5C5549] font-medium leading-relaxed">
-                  Introduce el código TOTP de 6 dígitos generado por tu app de autenticación (Google Authenticator) para <strong className="text-[#141A14]">{adminEmail}</strong>.
-                </p>
-                <div className="mt-2.5 text-[11px] text-[#1B3818] bg-[#EAE2D2] border border-[#DFD3C1] rounded-xl py-1.5 px-2.5 font-mono font-bold flex items-center justify-center gap-1.5">
-                  <span>🔑 PIN Maestro de Soporte:</span>
-                  <span className="bg-white px-1.5 py-0.5 rounded border border-[#DFD3C1] text-xs">202600</span>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-black text-[#1B3818] uppercase tracking-wider mb-1.5 text-center">
-                  Código de Seguridad 2FA
-                </label>
-                <input 
-                  type="text"
-                  maxLength={18}
-                  value={adminTotpCode}
-                  onChange={e => setAdminTotpCode(e.target.value)}
-                  required
-                  autoFocus
-                  className="w-full bg-[#FAF7F2] border-2 border-[#1B3818] focus:border-[#C88A35] focus:ring-2 focus:ring-[#C88A35]/30 rounded-xl px-4 py-3 text-center text-xl font-mono font-black tracking-widest text-[#141A14] transition-all outline-none placeholder:text-stone-300"
-                  placeholder="000000"
-                />
-              </div>
-
-              <div className="flex gap-2 pt-2">
-                <button 
-                  type="button"
-                  onClick={() => { setAuthStep('credentials'); setAdminError(''); }}
-                  className="w-1/3 bg-[#FAF7F2] hover:bg-[#F3EDE2] text-[#5C5549] border border-[#DFD3C1] font-bold py-3 px-3 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer"
-                >
-                  Volver
-                </button>
-                <button 
-                  type="submit"
-                  disabled={adminLoading || !adminTotpCode}
-                  className="w-2/3 bg-[#1B3818] hover:bg-[#264B22] text-[#F8F4EC] font-display font-extrabold py-3.5 px-4 rounded-xl uppercase tracking-wider transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg text-xs border border-[#C88A35]/30 cursor-pointer"
-                >
-                  {adminLoading ? 'Verificando...' : 'Acceder al Obrador'}
                 </button>
               </div>
-            </form>
-          )}
-        </div>
-
-        {/* Modal Crear Nuevo Administrador */}
-        {showCreateAdminModal && (
-          <div className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-            <div className="w-full max-w-md bg-white border-2 border-[#DFD3C1] rounded-3xl p-6 sm:p-8 shadow-2xl relative">
-              <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#DFD3C1]">
-                <div className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#C88A35]"></div>
-                  <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1B3818]">Crear Nuevo Administrador</h3>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setShowCreateAdminModal(false)}
-                  className="text-stone-400 hover:text-stone-700 text-xl font-bold w-7 h-7 flex items-center justify-center cursor-pointer"
-                >
-                  &times;
-                </button>
-              </div>
-
-              {createAdminMsg && (
-                <div className={`p-3 rounded-xl text-xs font-bold mb-4 ${createAdminMsg.error ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}`}>
-                  {createAdminMsg.text}
-                </div>
-              )}
-
-              <form onSubmit={handleCreateAdminSubmit} className="space-y-3.5 text-left">
-                <div>
-                  <label className="block text-[10px] font-black text-[#1B3818] uppercase tracking-wider mb-1">Nombre Completo</label>
-                  <input
-                    type="text"
-                    required
-                    value={newAdminName}
-                    onChange={e => setNewAdminName(e.target.value)}
-                    placeholder="Ej: Karc0 Obrador"
-                    className="w-full bg-[#FAF7F2] border border-[#DFD3C1] rounded-xl px-3.5 py-2.5 text-xs text-[#141A14] outline-none focus:border-[#1B3818] font-medium"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-black text-[#1B3818] uppercase tracking-wider mb-1">Correo Electrónico</label>
-                  <input
-                    type="email"
-                    required
-                    value={newAdminEmail}
-                    onChange={e => setNewAdminEmail(e.target.value)}
-                    placeholder="admin@bokadipan.com"
-                    className="w-full bg-[#FAF7F2] border border-[#DFD3C1] rounded-xl px-3.5 py-2.5 text-xs text-[#141A14] outline-none focus:border-[#1B3818] font-medium"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-black text-[#1B3818] uppercase tracking-wider mb-1">Contraseña</label>
-                  <input
-                    type="password"
-                    required
-                    minLength={6}
-                    value={newAdminPassword}
-                    onChange={e => setNewAdminPassword(e.target.value)}
-                    placeholder="Mínimo 6 caracteres"
-                    className="w-full bg-[#FAF7F2] border border-[#DFD3C1] rounded-xl px-3.5 py-2.5 text-xs text-[#141A14] outline-none focus:border-[#1B3818] font-medium"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-black text-[#1B3818] uppercase tracking-wider mb-1">PIN / Clave de Autorización Maestra</label>
-                  <input
-                    type="text"
-                    value={masterKey}
-                    onChange={e => setMasterKey(e.target.value)}
-                    placeholder="202600"
-                    className="w-full bg-[#FAF7F2] border border-[#DFD3C1] rounded-xl px-3.5 py-2.5 text-xs text-[#141A14] outline-none focus:border-[#1B3818] font-mono font-bold"
-                  />
-                  <p className="text-[10px] text-[#5C5549] mt-1 font-medium">Clave maestra de autorización predeterminada: <strong className="text-[#1B3818]">202600</strong></p>
-                </div>
-
-                <div className="flex gap-2 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setShowCreateAdminModal(false)}
-                    className="w-1/3 bg-[#FAF7F2] hover:bg-[#F3EDE2] text-[#5C5549] border border-[#DFD3C1] rounded-xl py-2.5 text-xs font-bold cursor-pointer"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={isCreatingAdmin}
-                    className="w-2/3 bg-[#1B3818] hover:bg-[#264B22] text-[#F8F4EC] rounded-xl py-2.5 text-xs font-bold uppercase tracking-wider disabled:opacity-50 cursor-pointer border border-[#C88A35]/30 shadow-md"
-                  >
-                    {isCreatingAdmin ? 'Registrando...' : 'Registrar Administrador'}
-                  </button>
-                </div>
-              </form>
             </div>
-          </div>
-        )}
+
+            <div className="flex items-center justify-between pt-1">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  checked={rememberMe} 
+                  onChange={e => setRememberMe(e.target.checked)} 
+                  className="w-4 h-4 rounded border-[#DFD3C1] text-[#1B3818] bg-[#FAF7F2] focus:ring-[#1B3818]" 
+                />
+                <span className="text-xs text-[#5C5549] font-medium">Recordar sesión</span>
+              </label>
+              <button 
+                type="button" 
+                onClick={handleResetPassword} 
+                disabled={isResetting || !adminEmail} 
+                className="text-xs text-[#C88A35] hover:text-[#9C5B18] font-bold transition-colors disabled:opacity-50 cursor-pointer"
+              >
+                ¿Olvidaste la clave?
+              </button>
+            </div>
+
+            <button 
+              type="submit"
+              disabled={adminLoading}
+              className="w-full bg-[#1B3818] hover:bg-[#264B22] text-[#F8F4EC] font-display font-extrabold py-3.5 px-4 rounded-xl uppercase tracking-wider transition-all mt-3 disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg text-xs cursor-pointer border border-[#C88A35]/30"
+            >
+              {adminLoading ? 'Iniciando sesión...' : 'Continuar al Panel'}
+            </button>
+          </form>
+        </div>
 
         <button 
           onClick={() => window.location.href = '/'}

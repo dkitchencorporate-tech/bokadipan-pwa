@@ -122,6 +122,16 @@
         .no-scrollbar::-webkit-scrollbar { display: none !important; width: 0px !important; height: 0px !important; }
         .no-scrollbar { -ms-overflow-style: none !important; scrollbar-width: none !important; }
 
+        /* Ocultar iconos nativos de contraseña en Edge/Chromium para evitar desalineación visual */
+        input::-ms-reveal,
+        input::-ms-clear {
+            display: none !important;
+        }
+        input::-webkit-credentials-auto-fill-button {
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+
         .glass-nav {
             background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(20px);

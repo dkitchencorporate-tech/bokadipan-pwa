@@ -142,16 +142,6 @@ async function handleLogin(req, res) {
       return res.status(401).json({ error: 'Credenciales incorrectas' });
     }
 
-    // Flujo Administrador -> Exige Google Authenticator (TOTP)
-    if (profile.is_admin) {
-      return res.status(200).json({
-        requires_2fa: true,
-        auth_type: 'totp',
-        email_hint: profile.email ? profile.email.replace(/(.{2})(.*)(@.*)/, '$1***$3') : 'Admin',
-        message: 'Introduce el código de 6 dígitos de tu aplicación Google Authenticator'
-      });
-    }
-
     const token = signToken(profile);
     return res.status(200).json({ token, profile: sanitizeProfile(profile) });
   } catch (err) {
@@ -538,68 +528,11 @@ async function handleDeleteTestData(req, res) {
   }
 }
 
-async function handleCreateAdmin(req, res) {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
-    return res.status(405).json({ error: 'Método no permitido' });
-  }
-
-  const auth = getAuth(req);
-  const { email, password, full_name, masterKey } = req.body || {};
-
-  const isMasterKeyValid = masterKey && (
-    masterKey === (process.env.SUPER_ADMIN_PASSWORD || 'DKitchenAdmin2026!') ||
-    masterKey === (process.env.SUPER_ADMIN_TOTP_SECRET || 'DKITCHENMASTER2026') ||
-    masterKey === 'DKITCHENMASTER2026' ||
-    masterKey === '202600'
-  );
-
-  if ((!auth || !auth.isAdmin) && !isMasterKeyValid) {
-    return res.status(403).json({ error: 'No autorizado para crear administradores. Se requiere sesión de administrador o clave maestra.' });
-  }
-
-  if (!email || !password || !full_name) {
-    return res.status(400).json({ error: 'Faltan campos requeridos (nombre, email, contraseña)' });
-  }
-
-  try {
-    const cleanEmail = String(email).trim().toLowerCase();
-    const passwordHash = await hashPassword(password);
-    const newUserId = crypto.randomUUID();
-
-    const profile = await withTx(async (client) => {
-      const existing = await client.query('SELECT * FROM profiles WHERE LOWER(email) = $1', [cleanEmail]);
-      if (existing.rows.length > 0) {
-        const updated = await client.query(
-          `UPDATE profiles SET is_admin = true, password_hash = $1, full_name = $2, is_email_verified = true WHERE id = $3 RETURNING *`,
-          [passwordHash, full_name, existing.rows[0].id]
-        );
-        return updated.rows[0];
-      } else {
-        const phone = '+34600' + Math.floor(100000 + Math.random() * 900000);
-        const inserted = await client.query(
-          `INSERT INTO profiles (id, full_name, phone, email, password_hash, is_admin, is_email_verified)
-           VALUES ($1, $2, $3, $4, $5, true, true)
-           RETURNING *`,
-          [newUserId, full_name, phone, cleanEmail, passwordHash]
-        );
-        return inserted.rows[0];
-      }
-    }, { bypass: true });
-
-    return res.status(200).json({ success: true, message: 'Administrador configurado con éxito', profile: sanitizeProfile(profile) });
-  } catch (err) {
-    console.error('Error creando administrador:', err);
-    return res.status(500).json({ error: 'Error al registrar administrador: ' + err.message });
-  }
-}
-
 export default async function handler(req, res) {
   const { action } = req.query || {};
   switch (action) {
     case 'login': return handleLogin(req, res);
     case 'verify-2fa': return handleVerifyAdmin2FA(req, res);
-    case 'create-admin': return handleCreateAdmin(req, res);
     case 'register': return handleRegister(req, res);
     case 'verify-email': return handleVerifyEmail(req, res);
     case 'resend-verification': return handleResendVerification(req, res);

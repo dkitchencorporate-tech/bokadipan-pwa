@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <title>D-Kitchen | PWA Gastronómica de Alta Gama</title>
+
+    <!-- SEO & OpenGraph Meta Tags (Personalizables vía brandConfig) -->
+    <meta name="description" content="Plataforma PWA oficial de pedidos, carta interactiva y delivery gastronómico de alta gama por D-Kitchen Corporate Tech.">
+    <meta name="keywords" content="pwa, comida a domicilio, delivery, carta digital, restaurante, dkitchen">
+    <meta property="og:title" content="D-Kitchen | PWA Gastronómica Oficial">
+    <meta property="og:description" content="Gastronomía digital de autor. Pide a domicilio o recoge en local con seguimiento en tiempo real.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- PWA Manifest & iOS Support -->
+    <link id="manifest-link" rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#FFFFFF">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="D-Kitchen PWA">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+
+    <!-- Active legacy cache purge script for mobile PWA -->
+    <script>
+      if ('caches' in window) {
+        caches.keys().then(function(keys) {
+          keys.forEach(function(k) {
+            if (k !== 'dkitchen-pwa-v1') caches.delete(k);
+          });
+        });
+      }
+    </script>
+
+    <!-- Google Fonts (Tipografía de Alto Standing: Outfit & Plus Jakarta Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- Tailwind CSS (CDN Runtime con Variables CSS Dinámicas) -->
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                primary: 'var(--brand-primary, #18181B)',
+                primaryHover: 'var(--brand-primary-hover, #27272A)',
+                primaryLight: 'var(--brand-primary-light, #F4F4F5)',
+                accent: 'var(--brand-accent, #DC2626)',
+                accentHover: 'var(--brand-accent-hover, #B91C1C)',
+                surface: 'var(--brand-surface, #FAFAFA)',
+                card: 'var(--brand-card, #FFFFFF)',
+                cardHover: 'var(--brand-card-hover, #F4F4F5)',
+                ink: 'var(--brand-ink, #18181B)',
+                inkSoft: 'var(--brand-ink-soft, #6B7280)',
+                border: 'var(--brand-border, #E5E7EB)'
+              },
+              fries: {
+                base: 'var(--brand-card, #FFFFFF)',
+                surface: 'var(--brand-surface, #FAFAFA)',
+                card: 'var(--brand-card, #FFFFFF)',
+                cardHover: 'var(--brand-card-hover, #F4F4F5)',
+                ink: 'var(--brand-ink, #18181B)',
+                inkSoft: 'var(--brand-ink-soft, #6B7280)',
+                amber: 'var(--brand-primary, #18181B)',
+                amberDark: 'var(--brand-primary-hover, #27272A)',
+                amberLight: 'var(--brand-primary-light, #F4F4F5)',
+                gold: 'var(--brand-primary, #18181B)',
+                border: 'var(--brand-border, #E5E7EB)'
+              }
+            },
+            fontFamily: {
+              sans: ['Plus Jakarta Sans', 'sans-serif'],
+              display: ['Outfit', 'sans-serif']
+            }
+          }
+        }
+      }
+    </script>
+
+    <!-- GSAP + ScrollTrigger -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
+    <style>
+        :root {
+            --brand-primary: #18181B;
+            --brand-primary-hover: #27272A;
+            --brand-surface: #F4F4F5;
+            --brand-card: #FFFFFF;
+            --brand-ink: #09090B;
+            --brand-border: #E4E4E7;
+            --brand-muted: #71717A;
+            --brand-gold: #71717A;
+        }
+
+        body {
+            background-color: var(--brand-surface, #F4F4F5);
+            color: var(--brand-ink, #09090B);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Ocultación absoluta de barras de desplazamiento (scrollbars) en toda la PWA para estética 100% nativa */
+        *, *::before, *::after {
+            scrollbar-width: none !important; /* Firefox */
+            -ms-overflow-style: none !important; /* IE y Edge */
+        }
+
+        *::-webkit-scrollbar {
+            display: none !important; /* Chrome, Safari, Opera */
+            width: 0px !important;
+            height: 0px !important;
+            background: transparent !important;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none !important; width: 0px !important; height: 0px !important; }
+        .no-scrollbar { -ms-overflow-style: none !important; scrollbar-width: none !important; }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--brand-border, #E4E4E7);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .glass-floating {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid var(--brand-border, #E4E4E7);
+        }
+
+        .category-pill {
+            background-color: var(--brand-card, #FFFFFF);
+            color: var(--brand-muted, #71717A);
+            border: 1px solid var(--brand-border, #E4E4E7);
+            transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+        }
+        .category-pill:hover {
+            color: var(--brand-ink, #09090B);
+            border-color: var(--brand-primary, #18181B);
+            background-color: var(--brand-surface, #F4F4F5);
+        }
+        .category-pill.active {
+            background: var(--brand-primary, #18181B);
+            color: #FFFFFF;
+            font-weight: 800;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            border-color: var(--brand-primary, #18181B);
+        }
+
+        .card-curved {
+            background-color: var(--brand-card, #FFFFFF);
+            border: 1px solid var(--brand-border, #E4E4E7);
+            border-radius: 2rem;
+            transition: all 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-curved:hover {
+            border-color: var(--brand-primary, #18181B);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+            transform: translateY(-4px);
+        }
+
+        /* Defensive resets to prevent FOUC / layout blowouts on slow connections or initial render */
+        svg {
+            display: inline-block;
+            vertical-align: middle;
+            max-width: 100%;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade { animation: fadeIn 0.4s ease-out forwards; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

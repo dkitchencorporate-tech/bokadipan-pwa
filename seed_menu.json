@@ -1,0 +1,82 @@
+[
+  {
+    "category": "Platos Principales",
+    "sort_order": 1,
+    "products": [
+      {
+        "name": "Especialidad de la Casa",
+        "description": "Receta artesanal de autor elaborada con ingredientes frescos de máxima calidad.",
+        "price": 10.90,
+        "image_url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80",
+        "badge": "TOP VENTAS",
+        "is_available": true
+      },
+      {
+        "name": "Menú Gourmet Signature",
+        "description": "Combinación exclusiva con guarnición y salsa especial elaborada a fuego lento.",
+        "price": 12.50,
+        "image_url": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80",
+        "badge": "RECOMENDADO",
+        "is_available": true
+      }
+    ]
+  },
+  {
+    "category": "Complementos & Entrantes",
+    "sort_order": 2,
+    "products": [
+      {
+        "name": "Entrante Crujiente",
+        "description": "Porción generosa perfecta para compartir, crujiente y dorada.",
+        "price": 4.50,
+        "image_url": "https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=800&q=80",
+        "badge": null,
+        "is_available": true
+      },
+      {
+        "name": "Salsa de Autor",
+        "description": "Salsa artesanal para acompañar cualquier plato.",
+        "price": 1.50,
+        "image_url": null,
+        "badge": null,
+        "is_available": true
+      }
+    ]
+  },
+  {
+    "category": "Bebidas",
+    "sort_order": 3,
+    "products": [
+      {
+        "name": "Refrescos Variados",
+        "description": "Lata 33cl a elegir (Cola, Cero, Limón, Naranja).",
+        "price": 2.20,
+        "image_url": "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=800&q=80",
+        "badge": null,
+        "is_available": true
+      },
+      {
+        "name": "Agua Mineral Natural",
+        "description": "Botella 50cl.",
+        "price": 1.50,
+        "image_url": null,
+        "badge": null,
+        "is_available": true
+      }
+    ]
+  },
+  {
+    "category": "Postres",
+    "sort_order": 4,
+    "products": [
+      {
+        "name": "Tarta Artesana",
+        "description": "Porción de tarta casera del día con base de galleta y coulis de frutos rojos.",
+        "price": 4.90,
+        "image_url": "https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80",
+        "badge": "CASERO",
+        "is_available": true
+      }
+    ]
+  }
+]

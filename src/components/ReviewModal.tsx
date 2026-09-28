@@ -1,0 +1,161 @@
+﻿import React, { useState } from 'react';
+import { useHardwareBack } from '../utils/useHardwareBack';
+import { useAuthStore } from '../store/authStore';
+import { useI18nStore } from '../store/i18nStore';
+import { api } from '../lib/apiClient';
+
+interface ReviewModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  order: any;
+}
+
+export default function ReviewModal({ isOpen, onClose, order }: ReviewModalProps) {
+  useHardwareBack(isOpen, onClose);
+  const [rating, setRating] = useState<number>(0);
+  const [hoverRating, setHoverRating] = useState<number>(0);
+  const [comment, setComment] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const { user, openUserModal, setModalView } = useAuthStore();
+  const { t } = useI18nStore();
+
+  if (!isOpen || !order) return null;
+
+  const isGuest = !user;
+  const pointsEarned = Math.floor(order.total_amount / 10) * 4;
+
+  const handleSubmit = async () => {
+    setIsSaving(true);
+    try {
+      // No hay tabla `reviews` aparte en este esquema: la valoración vive
+      // directamente en orders.rating/review_comment (ver api/review.js).
+      await api.post('/review', {
+        orderId: order.id,
+        rating,
+        comment: comment.trim() || null
+      });
+    } catch (e) {
+      // Silencioso: una reseña que falla nunca debe bloquear el cierre del pedido para el cliente
+    }
+    setIsSaving(false);
+    setSubmitted(true);
+    setTimeout(() => {
+      onClose();
+      // Reiniciar estado por si se abre de nuevo
+      setTimeout(() => {
+        setSubmitted(false);
+        setRating(0);
+        setComment('');
+      }, 500);
+    }, 2000);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[1300] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-fade-in">
+      <div className="bg-white border border-gray-200 rounded-3xl w-full max-w-md overflow-hidden shadow-[0_0_50px_rgba(245, 158, 11,0.15)] relative">
+        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-brand-accent to-brand-primaryHover"></div>
+        
+        {submitted ? (
+          <div className="p-8 text-center animate-scale-in">
+            <div className="w-20 h-20 bg-brand-primary/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-brand-primary/30">
+              <span className="text-4xl">💚</span>
+            </div>
+            <h3 className="text-2xl font-display font-black text-brand-ink mb-2 uppercase">{t('thanks_for_review')}</h3>
+            <p className="text-gray-500 text-sm">{t('review_help_improve')}</p>
+          </div>
+        ) : (
+          <div className="p-6 sm:p-8">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-orange-500/20 text-orange-400 mb-4 border border-orange-500/30">
+                <span className="text-3xl">🍕</span>
+              </div>
+              <h2 className="text-3xl font-display font-black text-brand-ink uppercase tracking-wider mb-2">{t('order_delivered_title')}</h2>
+              <p className="text-gray-500 text-sm mb-4">{t('hope_enjoy_food')}</p>
+              
+              {pointsEarned > 0 && (
+                <div className={`${isGuest ? 'bg-orange-500/10 border-orange-500/30' : 'bg-brand-primary/10 border-brand-primary/30'} border rounded-xl p-4 shadow-sm mx-auto max-w-sm`}>
+                  <div className="flex items-center gap-3 justify-center mb-2">
+                    <span className="w-6 h-6 rounded bg-orange-600 text-brand-ink font-display font-bold flex items-center justify-center text-[10px]">VIP</span>
+                    <span className="text-sm font-bold text-brand-ink">
+                      {isGuest ? t('could_have_earned') : t('you_earned')}
+                      <strong className="text-yellow-400">{pointsEarned}{t('points_abbr')}</strong>
+                      {isGuest ? '!' : ''}
+                    </span>
+                  </div>
+                  {isGuest && (
+                    <>
+                      <p className="text-xs text-gray-500 mb-3">{t('dont_lose_points_next_order')}</p>
+                      <button 
+                        onClick={() => {
+                          onClose();
+                          setModalView('register');
+                          openUserModal();
+                        }}
+                        className="w-full bg-orange-600 hover:bg-orange-500 text-brand-ink font-bold py-2 rounded-lg uppercase tracking-wider text-xs transition-all"
+                      >
+                        {t('create_free_account')}
+                      </button>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-6 mt-6">
+              <div className="text-center">
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">{t('what_did_you_think')}</p>
+                <div className="flex items-center justify-center gap-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      className="transition-transform hover:scale-110 focus:outline-none"
+                      onMouseEnter={() => setHoverRating(star)}
+                      onMouseLeave={() => setHoverRating(0)}
+                      onClick={() => setRating(star)}
+                    >
+                      <svg 
+                        className={`w-10 h-10 ${star <= (hoverRating || rating) ? 'text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]' : 'text-zinc-800'}`} 
+                        fill="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                      </svg>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {rating > 0 && (
+                <textarea
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  placeholder={t('review_comment_placeholder')}
+                  maxLength={300}
+                  rows={3}
+                  className="w-full bg-white border border-gray-200 text-brand-ink text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-brand-primary transition-colors resize-none placeholder:text-zinc-600"
+                />
+              )}
+
+              <div className="space-y-3 pt-4">
+                <button
+                  onClick={handleSubmit}
+                  disabled={rating === 0 || isSaving}
+                  className="w-full bg-brand-primaryHover hover:bg-brand-primary text-white font-bold py-3.5 rounded-xl uppercase tracking-wider text-sm transition-all shadow-[0_0_20px_rgba(245,158,11,0.3)] disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {t('submit_rating')}
+                </button>
+                <button 
+                  onClick={onClose}
+                  className="w-full bg-transparent hover:bg-white text-gray-500 font-bold py-3.5 rounded-xl uppercase tracking-wider text-sm transition-all border border-gray-200"
+                >
+                  {t('close')}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

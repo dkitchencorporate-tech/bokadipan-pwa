@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" fill="none">
+  <rect width="300" height="80" rx="16" fill="transparent"/>
+  <!-- Cloche / Kitchen Icon -->
+  <g transform="translate(15, 15)">
+    <circle cx="25" cy="12" r="4" fill="#18181B"/>
+    <path d="M 8 32 C 8 18, 42 18, 42 32 Z" fill="#18181B"/>
+    <rect x="4" y="34" width="42" height="4" rx="2" fill="#71717A"/>
+  </g>
+  <!-- Brand Text -->
+  <text x="75" y="38" font-family="system-ui, sans-serif" font-size="24" font-weight="900" fill="#18181B" letter-spacing="1">D-KITCHEN</text>
+  <text x="75" y="55" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#71717A" letter-spacing="3">WHITE-LABEL ENGINE</text>
+</svg>

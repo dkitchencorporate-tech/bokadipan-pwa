@@ -1,0 +1,55 @@
+{
+  "name": "dkitchen-white-label-engine",
+  "version": "3.0.0",
+  "description": "Plantilla Matriz White-Label PWA para Restauración y Gastronomía por D-Kitchen Corporate Tech",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node test_urls.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dkitchencorporate-tech/dkitchen-white-label-engine.git"
+  },
+  "keywords": [
+    "pwa",
+    "white-label",
+    "restaurant-pos",
+    "dkitchen",
+    "food-ordering",
+    "neon-postgres",
+    "vercel"
+  ],
+  "author": "D-Kitchen Corporate Tech <devops@dkitchencorporate.tech>",
+  "license": "Proprietary",
+  "homepage": "https://github.com/dkitchencorporate-tech/dkitchen-white-label-engine#readme",
+  "dependencies": {
+    "@vercel/blob": "^2.8.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.0.5",
+    "autoprefixer": "^10.5.4",
+    "bcryptjs": "^2.4.3",
+    "dompurify": "^3.4.13",
+    "dotenv": "^17.4.2",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^10.0.1",
+    "pg": "^8.23.0",
+    "postcss": "^8.5.26",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.1",
+    "zustand": "^5.0.14"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/dompurify": "^3.0.5"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

@@ -1,0 +1,13 @@
+node_modules/
+.DS_Store
+*.log
+client_secret_*.json
+.env
+.env.*
+dist/
+.vercel
+.env*.local
+New Assets/
+scratch/
+.agents/
+

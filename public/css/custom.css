@@ -1,0 +1,298 @@
+/* =========================================================================
+   SEVEN FOOD FRIES PWA - CUSTOM DESIGN SYSTEM (LIGHT / WHITE THEME)
+   ========================================================================= */
+
+html {
+    overflow-x: hidden;
+}
+
+body {
+    background-color: #FFFFFF;
+    color: #18181B;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+/* Ocultación absoluta de barras de desplazamiento para estética nativa PWA */
+*, *::before, *::after {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+
+*::-webkit-scrollbar {
+    display: none !important;
+    width: 0px !important;
+    height: 0px !important;
+    background: transparent !important;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none !important;
+    width: 0px !important;
+    height: 0px !important;
+}
+.no-scrollbar {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+}
+
+/* Cabecera de cristal claro */
+.glass-nav {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(245, 158, 11, 0.25);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+.glass-floating {
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+/* Píldoras de Categoría */
+.category-pill {
+    transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+}
+.category-pill:hover {
+    color: #18181B;
+    border-color: #F59E0B;
+    background-color: #FFF7ED;
+}
+.category-pill.active {
+    background-color: #F59E0B;
+    color: #FFFFFF;
+    font-weight: 800;
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+    border-color: #FACC15;
+}
+
+/* Tarjetas de Producto */
+.card-curved {
+    background-color: #FFFFFF;
+    border: 2px solid rgba(245, 158, 11, 0.25);
+    border-radius: 1.8rem;
+    transition: all 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-curved:hover {
+    border-color: #F59E0B;
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.25);
+    transform: translateY(-4px);
+}
+
+/* Ticker Marquee Animation */
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+    animation: marquee 60s linear infinite;
+    width: max-content;
+}
+.animate-marquee:hover {
+    animation-play-state: paused;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* Scroll-reveal (landing /registro) */
+.reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.3); }
+    50% { box-shadow: 0 0 45px rgba(245, 158, 11, 0.55); }
+}
+.animate-glow-pulse {
+    animation: glowPulse 2.4s ease-in-out infinite;
+}
+
+/* =========================================================================
+   LANDING /registro — "diseño de autor": grano editorial, sello giratorio,
+   botón tipo ticket. Piezas de firma propia, no plantilla SaaS genérica.
+   ========================================================================= */
+
+/* Grano sutil sobre todo el fondo — sensación de papel/print premium, no plano */
+.landing-grain {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.04;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-repeat: repeat;
+}
+
+/* Fondo de splash "lluvia de paquetes de patatas" — arte y mecánica propios,
+   CSS puro sin dependencias externas. Ver FriesRainBackground.tsx. */
+@keyframes fryPacketFall {
+    0% { transform: translateY(-10vh) rotate(0deg); }
+    100% { transform: translateY(110vh) rotate(var(--fry-rotate, 360deg)); }
+}
+.fry-packet-fall {
+    position: absolute;
+    top: 0;
+    animation-name: fryPacketFall;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+/* Sello circular giratorio — firma de marca, gira sin depender del scroll */
+@keyframes sealSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+.landing-seal {
+    animation: sealSpin 18s linear infinite;
+}
+
+/* Botón "ticket": ligera rotación que se endereza al pasar el cursor, borde tipo perforado */
+.landing-stamp-btn {
+    position: relative;
+    transform: rotate(-1.5deg);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
+}
+.landing-stamp-btn:hover {
+    transform: rotate(0deg) scale(1.04);
+}
+.landing-stamp-btn::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border: 1.5px dashed rgba(0, 0, 0, 0.15);
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+/* Numeración editorial de "Cómo funciona" — trazo hueco, no relleno sólido */
+.landing-outline-num {
+    -webkit-text-stroke: 1.5px rgba(24, 24, 27, 0.25);
+    color: transparent;
+}
+
+/* =========================================================================
+   ANIMACIONES DE ENTRADA DE MODALES — usadas en más de 10 componentes
+   (AddToCartModal, ReviewModal, UserModal, GuestRegistrationModal, etc.)
+   pero nunca estuvieron definidas: los modales aparecían sin transición.
+   ========================================================================= */
+@keyframes fadeInModal {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.animate-fade-in {
+    animation: fadeInModal 0.25s ease-out forwards;
+}
+
+@keyframes scaleInModal {
+    from { opacity: 0; transform: scale(0.94); }
+    to { opacity: 1; transform: scale(1); }
+}
+.animate-scale-in {
+    animation: scaleInModal 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUpModal {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up {
+    animation: slideUpModal 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* =========================================================================
+   DUAL PRINT ENGINE (SEPARACIÓN TOTAL: COMANDAS 80MM vs INFORMES A4)
+   ========================================================================= */
+
+@media screen {
+  .ticket-printer-container {
+    display: none !important;
+  }
+  .audit-report-container {
+    display: none !important;
+  }
+}
+
+@page {
+  size: A4 portrait;
+  margin: 10mm 15mm;
+}
+
+@media print {
+  /* =====================================================
+     MODO 1: COMANDAS TÉRMICAS DE COCINA / MOSTRADOR (80MM)
+     ===================================================== */
+  body.printing-ticket * {
+    visibility: hidden;
+  }
+  body.printing-ticket .ticket-printer-container,
+  body.printing-ticket .ticket-printer-container * {
+    visibility: visible !important;
+    display: block !important;
+  }
+  body.printing-ticket .ticket-printer-container {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 80mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+    font-family: monospace !important;
+  }
+  body.printing-ticket .audit-report-container {
+    display: none !important;
+  }
+
+  /* =====================================================
+     MODO 2: INFORMES DE AUDITORÍA, ARQUEO Y CIERRE (A4)
+     ===================================================== */
+  body.printing-audit-report .ticket-printer-container {
+    display: none !important;
+  }
+  body.printing-audit-report .audit-report-container,
+  body.printing-audit-report .audit-report-container * {
+    visibility: visible !important;
+    color: #000000 !important;
+  }
+  body.printing-audit-report .audit-report-container {
+    display: block !important;
+    width: 100% !important;
+    background-color: #FFFFFF !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* REGLAS BASE COMUNES DE IMPRESIÓN */
+  html, body, #root {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow: visible !important;
+  }
+
+  .print\:hidden,
+  aside,
+  nav,
+  header {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}

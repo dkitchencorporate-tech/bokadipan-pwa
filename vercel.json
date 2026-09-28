@@ -1,0 +1,53 @@
+{
+  "buildCommand": "vite build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "routes": [
+    {
+      "src": "/(manifest.*\\.json|sw\\.js)",
+      "headers": {
+        "cache-control": "public, max-age=0, must-revalidate"
+      },
+      "continue": true
+    },
+    {
+      "src": "/(.*)",
+      "headers": {
+        "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "SAMEORIGIN",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Permissions-Policy": "camera=(), microphone=()"
+      },
+      "continue": true
+    },
+    { "src": "/api/login$", "dest": "/api/account?action=login" },
+    { "src": "/api/register$", "dest": "/api/account?action=register" },
+    { "src": "/api/account/verify-2fa$", "dest": "/api/account?action=verify-2fa" },
+    { "src": "/api/account/verify-email$", "dest": "/api/account?action=verify-email" },
+    { "src": "/api/account/resend-verification$", "dest": "/api/account?action=resend-verification" },
+    { "src": "/api/profile$", "dest": "/api/account?action=profile" },
+    { "src": "/api/delete-account$", "dest": "/api/account?action=delete-account" },
+    { "src": "/api/is-phone-registered$", "dest": "/api/account?action=is-phone-registered" },
+    { "src": "/api/checkout$", "dest": "/api/orders?action=checkout" },
+    { "src": "/api/claim-order$", "dest": "/api/orders?action=claim-order" },
+    { "src": "/api/order-status$", "dest": "/api/orders?action=order-status" },
+    { "src": "/api/review$", "dest": "/api/orders?action=review" },
+    { "src": "/api/send-campaign$", "dest": "/api/notify?action=send-campaign" },
+    { "src": "/api/send-order-push$", "dest": "/api/notify?action=send-order-push" },
+    { "src": "/api/send-transactional-email$", "dest": "/api/notify?action=send-transactional-email" },
+    { "src": "/api/save-push-subscription$", "dest": "/api/notify?action=save-push-subscription" },
+    { "src": "/api/track-pwa-install$", "dest": "/api/notify?action=track-pwa-install" },
+    { "src": "/api/track-visit$", "dest": "/api/notify?action=track-visit" },
+    { "src": "/api/admin/analytics$", "dest": "/api/admin?action=analytics" },
+    { "src": "/api/admin/catalog$", "dest": "/api/admin?action=catalog" },
+    { "src": "/api/admin/upload-image$", "dest": "/api/admin?action=upload-image" },
+    { "src": "/api/admin/clients$", "dest": "/api/admin?action=clients" },
+    { "src": "/api/admin/kiosk-add-items$", "dest": "/api/admin?action=kiosk-add-items" },
+    { "src": "/api/admin/orders$", "dest": "/api/admin?action=orders" },
+    { "src": "/api/admin/settings$", "dest": "/api/admin?action=settings" },
+    { "src": "/api/admin/upsells$", "dest": "/api/admin?action=upsells" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}

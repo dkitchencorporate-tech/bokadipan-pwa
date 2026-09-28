@@ -12,24 +12,24 @@
 * **Marca:** BOKADIPAN — Bocadillos de Pan Rústico al Horno de Piedra con AOVE.
 * **URL Pública en Producción:** [`https://bokadipan-pwa.vercel.app`](https://bokadipan-pwa.vercel.app)
 * **Repositorio Oficial en GitHub:** [`dkitchencorporate-tech/bokadipan-pwa`](https://github.com/dkitchencorporate-tech/bokadipan-pwa) (rama `main`)
-* **Identidad Visual:** Obrador Rústico & Horno de Piedra (Fondo Crema Cálido `#FAF6F0`, Verde Oliva Profundo `#2D5A27`, Ámbar Tostado `#B45309`, Bordes Kraft/Harina `#E5DCD0`, Scrollbar personalizado de madera/obrador).
+* **Identidad Visual:** Obrador de Autor & Horno de Piedra Gourmet (Fondo Crema Cálido `#F8F4EC`, Verde Bosque Rústico Profundo `#1B3818`, Dorado Corteza Artesanal `#C88A35`, Bordes Kraft `#DFD3C1`, Tinta `#141A14`, Scrollbar de madera y piedra volcánica).
 * **Subdominio Corporativo DNS:** `bokadipan.dkitchencorporate.es` (CNAME `cname.vercel-dns.com`)
 * **Catálogo Integrado & Arquitectura de Subcategorías (Gobierno por BD):**
   - **Bocadillos Gourmet:** 7 variedades con fotografías macro sin personas en papel kraft.
+  - **Complementos & Picoteo:** 4 productos con fotografías dedicadas (patatas rústicas, bolsa, aceitunas, encurtidos).
   - **Postres Delivery:** Tarrinas selladas (Tiramisú, Mousse Belga, Cheesecake).
-  - **Bebidas Agrupadas:** 1 sola tarjeta visible con imagen por subcategoría (`Refrescos Clásicos`, `Cervezas Premium`, `Agua Mineral`) que abre el modal vertical rápido para selección sin saturación visual.
-* **Componentes Visuales & Modales:**
-  - `<BokadipanLogo />` SVG en cabecera y preloader.
-  - `SubcategoryModal`, `IngredientsModal`, `CartDrawer` y `CartBar` 100% integrados al diseño rústico.
-* **Esquema Neon Database:** Archivo maestro `schema_bokadipan.sql` con tabla `subcategories`, función `process_checkout` (`SECURITY DEFINER`), productos y 2FA TOTP.
-* **Documentación Operativa y Prompts:**
-  - `C:\Users\karc0\OneDrive\Desktop\BOKADIPAN\BOKADIPAN_PROMPTS_IMAGENES.md`
-  - `C:\Users\karc0\OneDrive\Desktop\BOKADIPAN\BOKADIPAN_MANUAL_OPERATIVO_Y_CUESTIONARIO.md`
+  - **Bebidas Agrupadas:** 1 sola tarjeta visible con imagen por subcategoría (`Refrescos Clásicos`, `Cervezas Premium`, `Agua Mineral`) con modal rápido vertical.
+* **Componentes Visuales Rediseñados:**
+  - Emblema Vectorial Gourmet de Autor (`<BokadipanLogo />` con espigas de trigo y cortes de hogaza rústica en relieve).
+  - Preloader tipográfico sobrio y minimalista de alta gama.
+  - Hero banner limpio: eliminado cuadro de dirección flotante y repeticiones, insignia dorada *"AL HORNO DE PIEDRA"* de alto contraste.
+  - Modales (`CheckoutModal`, `UpsellModal`, `SubcategoryModal`, `IngredientsModal`) 100% integrados a la nueva paleta oscura gourmet.
 
 ---
 
 ## 2. HISTORIAL COMPACTADO DE HITOS PREVIOS
 
+* **28-sep-2026 (v1.5.0):** Rediseño integral de identidad gourmet de autor (nuevo logotipo emblema de espigas/hogaza artesanal, preloader tipográfico sobrio sin saturación, paleta verde bosque profundo `#1B3818` / dorado corteza `#C88A35`, Hero simplificado de alto contraste y CheckoutModal sincronizado).
 * **28-sep-2026 (v1.4.0):** Inclusión de categoría `Complementos & Picoteo` (4 productos con imágenes: patatas rústicas, patatas de bolsa, aceitunas y encurtidos), saneamiento del banner Hero (eliminada referencia a tapas/bebidas incluidas) y blindaje del centrado responsive de `CartBar`.
 * **28-sep-2026 (v1.3.0):** Corrección integral de responsividad y contraste en `UpsellModal` y `CheckoutModal` (paleta rústica `#2D5A27`/`#FAF6F0`/`#E5DCD0`, botones CTA contrastados con texto blanco nítido, sin desbordamientos en móvil).
 * **28-sep-2026 (v1.2.0):** Implementación de subcategorías agrupadas para bebidas (1 sola tarjeta con imagen + modal interactivo rápido), diseño rústico total (bordes `#E5DCD0`, fondo `#FAF6F0`, verde `#2D5A27`, scrollbar de obrador) y saneamiento de mapeo de imágenes.

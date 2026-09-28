@@ -3,17 +3,17 @@
 @tailwind utilities;
 
 :root {
-  --brand-primary: #2D5A27;
-  --brand-primary-hover: #1E3D1A;
-  --brand-primary-light: #EAF2E8;
-  --brand-accent: #B45309;
-  --brand-accent-hover: #92400E;
-  --brand-surface: #FAF6F0;
+  --brand-primary: #1B3818;
+  --brand-primary-hover: #122810;
+  --brand-primary-light: #E6EFE4;
+  --brand-accent: #9A5B1E;
+  --brand-accent-hover: #7C4512;
+  --brand-surface: #F8F4EC;
   --brand-card: #FFFFFF;
-  --brand-card-hover: #FDFBF7;
-  --brand-ink: #1A201A;
-  --brand-ink-soft: #5C6B5C;
-  --brand-border: #E5DCD0;
+  --brand-card-hover: #FBF8F2;
+  --brand-ink: #141A14;
+  --brand-ink-soft: #4F5E4F;
+  --brand-border: #DFD3C1;
 }
 
 body {
@@ -28,15 +28,15 @@ body {
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #F3ECE2;
+  background: #F1E9DC;
 }
 ::-webkit-scrollbar-thumb {
-  background: #C4B5A2;
+  background: #BFAEA0;
   border-radius: 9999px;
-  border: 2px solid #F3ECE2;
+  border: 2px solid #F1E9DC;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #B45309;
+  background: #9A5B1E;
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -47,24 +47,24 @@ body {
   scrollbar-width: none;
 }
 
-/* Category pill rústico */
+/* Category pill rústico gourmet */
 .category-pill {
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   background: #FFFFFF;
-  color: #5C6B5C;
-  border: 2px solid #E5DCD0;
+  color: #4F5E4F;
+  border: 2px solid #DFD3C1;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 .category-pill:hover {
-  border-color: #2D5A27;
-  color: #2D5A27;
-  background: #FAF6F0;
+  border-color: #1B3818;
+  color: #1B3818;
+  background: #F8F4EC;
 }
 .category-pill.active {
-  background: #2D5A27;
+  background: #1B3818;
   color: #FFFFFF;
-  border-color: #2D5A27;
-  box-shadow: 0 6px 18px rgba(45, 90, 39, 0.35);
+  border-color: #1B3818;
+  box-shadow: 0 6px 18px rgba(27, 56, 24, 0.35);
 }
 
 @keyframes fadeIn {

@@ -1,17 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" fill="none">
   <rect width="320" height="80" rx="16" fill="transparent"/>
-  <!-- Baguette & Olive Icon -->
+  <!-- Artisan Emblem -->
   <g transform="translate(16, 16)">
-    <!-- Artisan Baguette Silhouette -->
-    <path d="M 6 36 C 2 30, 8 16, 24 10 C 38 4, 46 12, 44 24 C 42 34, 30 42, 16 42 C 10 42, 8 40, 6 36 Z" fill="#B45309"/>
-    <!-- Diagonal Oven Cuts -->
-    <path d="M 14 26 L 19 18" stroke="#FAF6F0" stroke-width="2.5" stroke-linecap="round"/>
-    <path d="M 22 30 L 28 20" stroke="#FAF6F0" stroke-width="2.5" stroke-linecap="round"/>
-    <path d="M 30 32 L 35 24" stroke="#FAF6F0" stroke-width="2.5" stroke-linecap="round"/>
-    <!-- Olive Leaf Accent -->
-    <path d="M 38 12 C 42 6, 48 8, 46 14 C 44 18, 38 16, 38 12 Z" fill="#2D5A27"/>
+    <rect width="48" height="48" rx="14" fill="#1B3818" stroke="#C88A35" stroke-width="2"/>
+    <path d="M 24 10 C 26 14, 30 15, 34 14 C 32 18, 33 22, 36 24" stroke="#C88A35" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M 24 10 C 22 14, 18 15, 14 14 C 16 18, 15 22, 12 24" stroke="#C88A35" stroke-width="1.6" stroke-linecap="round"/>
+    <ellipse cx="24" cy="27" rx="14" ry="10" fill="#C88A35"/>
+    <ellipse cx="24" cy="27" rx="13" ry="9" fill="#9C5B18"/>
+    <path d="M 16 24 Q 18 28 20 32" stroke="#F8F4EC" stroke-width="2" stroke-linecap="round"/>
+    <path d="M 22 22 Q 24 27 26 32" stroke="#F8F4EC" stroke-width="2" stroke-linecap="round"/>
+    <path d="M 28 24 Q 30 28 32 32" stroke="#F8F4EC" stroke-width="2" stroke-linecap="round"/>
+    <path d="M 24 6 C 26 8, 26 12, 24 14 C 22 12, 22 8, 24 6 Z" fill="#4ADE80"/>
   </g>
   <!-- Brand Typography -->
-  <text x="76" y="38" font-family="'Montserrat', 'Plus Jakarta Sans', system-ui, sans-serif" font-size="28" font-weight="900" fill="#1A201A" letter-spacing="1.5">BOKADI<tspan fill="#B45309">PAN</tspan></text>
-  <text x="77" y="55" font-family="system-ui, sans-serif" font-size="9" font-weight="800" fill="#2D5A27" letter-spacing="2.5">PAN RÚSTICO &bull; HORNO DE PIEDRA &bull; AOVE</text>
+  <text x="76" y="40" font-family="'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif" font-size="28" font-weight="900" fill="#141A14" letter-spacing="1">BOKADI<tspan fill="#C88A35">PAN</tspan></text>
+  <text x="77" y="56" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9" font-weight="900" fill="#1B3818" letter-spacing="2.5">PAN RÚSTICO &bull; HORNO DE PIEDRA</text>
 </svg>

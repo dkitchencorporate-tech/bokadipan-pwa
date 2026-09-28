@@ -250,31 +250,31 @@ export default function Catalog() {
               {/* Tarjeta de Ingredientes (Antes de la primera sección) */}
               {renderIngredients && (
                 <div className="mb-10">
-                  <div className="relative overflow-hidden rounded-3xl border-2 border-[#E5DCD0] bg-white shadow-lg p-6 sm:p-8">
+                  <div className="relative overflow-hidden rounded-3xl border-2 border-[#DFD3C1] bg-white shadow-md p-6 sm:p-8">
                     {/* Glow decorativo */}
-                    <div className="absolute -top-10 -right-10 w-52 h-52 rounded-full bg-[#2D5A27]/10 blur-3xl pointer-events-none"></div>
+                    <div className="absolute -top-10 -right-10 w-52 h-52 rounded-full bg-[#1B3818]/10 blur-3xl pointer-events-none"></div>
 
                     <div className="relative z-10 space-y-5">
                       {/* Título sutil */}
                       <div className="flex items-center gap-3">
-                        <div className="w-1.5 h-8 rounded-full bg-[#2D5A27]"></div>
+                        <div className="w-1.5 h-8 rounded-full bg-[#1B3818]"></div>
                         <div>
-                          <span className="text-[10px] font-mono font-bold text-[#2D5A27] uppercase tracking-widest">{t('our_ingredients_title')}</span>
-                          <p className="text-[#1A201A] font-display font-black text-base sm:text-lg uppercase tracking-wide leading-none mt-0.5">{t('our_ingredients_subtitle')}</p>
+                          <span className="text-[10px] font-mono font-bold text-[#1B3818] uppercase tracking-widest">{t('our_ingredients_title')}</span>
+                          <p className="text-[#141A14] font-display font-black text-base sm:text-lg uppercase tracking-wide leading-none mt-0.5">{t('our_ingredients_subtitle')}</p>
                         </div>
                       </div>
 
                       {/* Grid de ingredientes */}
                       <div className="flex flex-wrap gap-2">
                         {DEFAULT_EXTRA_TOPPINGS.map(ing => (
-                          <span key={ing} className="inline-flex items-center gap-1.5 bg-[#FAF6F0] border border-[#E5DCD0] text-[#5C6B5C] text-xs font-bold px-3 py-1.5 rounded-xl hover:border-[#2D5A27] hover:text-[#1A201A] transition-colors cursor-default">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#2D5A27] shrink-0"></span>
+                          <span key={ing} className="inline-flex items-center gap-1.5 bg-[#F8F4EC] border border-[#DFD3C1] text-[#4F5E4F] text-xs font-bold px-3 py-1.5 rounded-xl hover:border-[#1B3818] hover:text-[#141A14] transition-colors cursor-default">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#1B3818] shrink-0"></span>
                             {tDynamic(ing)}
                           </span>
                         ))}
                       </div>
 
-                      <p className="text-[11px] text-[#5C6B5C] font-medium">
+                      <p className="text-[11px] text-[#4F5E4F] font-medium">
                         {t('ingredients_note')}
                       </p>
                     </div>
@@ -284,24 +284,24 @@ export default function Catalog() {
 
               {/* Encabezado de Categoría */}
               <div className="py-10 my-2 text-center space-y-2">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#EAF2E8] border border-[#2D5A27]/30 mb-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#2D5A27]"></span>
-                  <span className="text-[#2D5A27] font-display font-black text-[11px] uppercase tracking-widest">{catProducts.length} {t('varieties')}</span>
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#E6EFE4] border border-[#1B3818]/20 mb-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#1B3818]"></span>
+                  <span className="text-[#1B3818] font-display font-black text-[11px] uppercase tracking-widest">{catProducts.length} {t('varieties')}</span>
                 </div>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                  <h2 className="font-display font-black text-3xl sm:text-4xl lg:text-5xl text-[#1A201A] uppercase tracking-tight leading-none">
+                  <h2 className="font-display font-black text-3xl sm:text-4xl lg:text-5xl text-[#141A14] uppercase tracking-tight leading-none">
                     {(lang === 'en' && cat.name_en) ? cat.name_en : tDynamic(cat.name)}
                   </h2>
                   {(cat.subtitle || cat.subtitle_en) && (
-                    <span className="text-[#B45309] font-display text-sm font-bold">
+                    <span className="text-[#C88A35] font-display text-sm font-bold">
                       {(lang === 'en' && cat.subtitle_en) ? cat.subtitle_en : tDynamic(cat.subtitle)}
                     </span>
                   )}
                 </div>
-                <p className="text-sm text-[#5C6B5C] max-w-2xl mx-auto font-medium leading-relaxed pt-1">
+                <p className="text-sm text-[#4F5E4F] max-w-2xl mx-auto font-medium leading-relaxed pt-1">
                   {(lang === 'en' && cat.description_en) ? cat.description_en : tDynamic(cat.description || cat.desc || '')}
                 </p>
-                <div className="w-16 h-1 bg-[#2D5A27] mx-auto mt-4 rounded-full"></div>
+                <div className="w-16 h-1 bg-[#1B3818] mx-auto mt-4 rounded-full"></div>
               </div>
 
               {/* Grid de Productos de esta Categoría */}

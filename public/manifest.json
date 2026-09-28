@@ -1,20 +1,26 @@
 {
-  "id": "dkitchen-white-label-pwa",
-  "name": "D-Kitchen PWA Gastronómica",
-  "short_name": "D-Kitchen",
-  "description": "Plataforma PWA oficial de pedidos, carta interactiva y delivery gastronómico.",
+  "id": "bokadipan-pwa",
+  "name": "BOKADIPAN | Bocadillos Rústicos",
+  "short_name": "BOKADIPAN",
+  "description": "Bocadillos de autor en pan rústico al horno de piedra con AOVE. Menús con picoteo y bebida incluidos.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FFFFFF",
-  "theme_color": "#18181B",
+  "background_color": "#FDFBF7",
+  "theme_color": "#4D7C0F",
   "orientation": "portrait",
   "scope": "/",
   "icons": [
     {
-      "src": "/assets/brand/logo.svg",
+      "src": "/assets/brand/favicon.svg",
       "sizes": "192x192 512x512",
       "type": "image/svg+xml",
       "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/brand/logo.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ]
 }

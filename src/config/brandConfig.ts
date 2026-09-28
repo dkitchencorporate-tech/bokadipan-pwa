@@ -90,34 +90,34 @@ export interface BrandConfig {
 }
 
 export const BRAND_CONFIG: BrandConfig = {
-  // 1. Identidad de Marca Neutra de Fábrica
-  name: "D-Kitchen Gourmet",
-  shortName: "D-Kitchen",
-  legalName: "D-Kitchen Corporate Tech S.L.",
-  slogan: "Gastronomía Digital & Delivery",
-  cif: "B-00000000",
+  // 1. Identidad de Marca BOKADIPAN
+  name: "BOKADIPAN",
+  shortName: "Bokadipan",
+  legalName: "DKITCHEN CORPORATE SL",
+  slogan: "Bocadillos de Pan Rústico al Horno de Piedra con AOVE",
+  cif: "B-28108000",
 
-  // 2. Canales de Contacto y Cobertura
-  phone: "+34 600 000 000",
-  email: "pedidos@dkitchencorporate.es",
-  address: "Calle Principal 1",
-  city: "Madrid, España",
-  postalCodesAllowed: ["28001", "28002", "28004", "28013", "28028"],
+  // 2. Canales de Contacto y Cobertura Alcobendas / Madrid
+  phone: "+34 685 57 09 83",
+  email: "dkitchencorporate@gmail.com",
+  address: "Calle La Granja 1 - Alcobendas",
+  city: "Madrid (CP 28108), España",
+  postalCodesAllowed: ["28108", "28100", "28050", "28049", "28033", "28034"],
 
-  // 3. Sistema de Diseño Tokenizado (Paleta Neutra Matriz / Monocromática)
+  // 3. Sistema de Diseño Tokenizado (Mediterráneo Orgánico & Pan Rústico)
   theme: {
-    primary: "#18181B",
-    primaryHover: "#27272A",
-    primaryLight: "#F4F4F5",
-    accent: "#52525B",
-    accentHover: "#3F3F46",
-    surface: "#FAFAFA",
-    card: "#FFFFFF",
-    cardHover: "#F4F4F5",
-    ink: "#18181B",
-    inkSoft: "#71717A",
-    border: "#E4E4E7",
-    gradientClass: "from-zinc-900 to-zinc-800",
+    primary: "#4D7C0F",        // Verde Oliva Intenso (AOVE & Frescura)
+    primaryHover: "#3F6212",   // Verde Oliva Oscuro
+    primaryLight: "#ECFCCB",   // Fondo Verde Oliva Suave
+    accent: "#D97706",         // Dorado Ámbar (Pan Crujiente Horno de Piedra)
+    accentHover: "#B45309",    // Ámbar Oscuro
+    surface: "#FDFBF7",        // Fondo Marfil Cálido Rústico
+    card: "#FFFFFF",           // Fondo de Tarjetas Blanco Puro
+    cardHover: "#FEFCE8",      // Hover Tarjetas Cálido
+    ink: "#1E293B",            // Texto Principal Grafito Oscuro (Máximo Contraste)
+    inkSoft: "#64748B",        // Texto Secundario
+    border: "#E2E8F0",         // Bordes
+    gradientClass: "from-lime-900 via-stone-900 to-amber-950",
   },
 
   // 4. Recursos Multimedia
@@ -131,34 +131,34 @@ export const BRAND_CONFIG: BrandConfig = {
 
   // 5. Preloader / Splash Screen
   splash: {
-    title: "D-Kitchen Gourmet",
-    subtitle: "Cargando carta y experiencia digital...",
-    durationMs: 1400,
+    title: "BOKADIPAN",
+    subtitle: "Horno de piedra, pan rústico y AOVE...",
+    durationMs: 1200,
   },
 
   // 6. Club de Fidelización
   loyalty: {
     enabled: true,
-    clubName: "Club Gourmet VIP",
-    badgeText: "🎁 CLUB VIP",
-    heroTitle: "GANA PUNTOS EN CADA PEDIDO",
-    heroSubtitle: "¡Y CANJEA TU PREMIO GRATIS!",
-    heroDescription: "Regístrate gratis, acumula puntos en cada pedido y canjea platos exclusivos de la carta.",
+    clubName: "Club BOKADI VIP",
+    badgeText: "🥖 CLUB BOKADI",
+    heroTitle: "ACUMULA PUNTOS EN CADA BOKADI",
+    heroSubtitle: "¡Y DISFRUTA DE RECOMPENSAS EXCLUSIVAS!",
+    heroDescription: "Regístrate gratis, acumula puntos con cada bocadillo o menú y canjea postres y tapas gratis.",
     pointsPerEuro: 4,
     rewardThresholdPoints: 25,
-    rewardDescription: "Tu plato favorito sale gratis.",
+    rewardDescription: "Tu mousse o aperitivo favorito gratis.",
   },
 
   // 7. Parámetros Operativos y Financieros
   orderDefaults: {
     currency: "EUR",
     currencySymbol: "€",
-    minOrderDelivery: 12.00,
+    minOrderDelivery: 10.00,
     deliveryFee: 2.50,
-    freeDeliveryThreshold: 25.00,
-    estimatedDeliveryMinutes: "30-45 min",
+    freeDeliveryThreshold: 22.00,
+    estimatedDeliveryMinutes: "25-40 min",
     estimatedPickupMinutes: "15-20 min",
-    upsellNotice: "¡Añade un postre y consigue ENVÍO GRATIS!",
+    upsellNotice: "¡Añade un postre artesano y consigue ENVÍO GRATIS!",
   },
 
   // 8. Enlaces de Redes y Reputación
@@ -166,6 +166,6 @@ export const BRAND_CONFIG: BrandConfig = {
     instagram: "https://instagram.com/dkitchencorporate",
     tiktok: "https://tiktok.com/@dkitchencorporate",
     googleReviewUrl: "https://g.page/r/dkitchen-reviews",
-    whatsapp: "+34600000000",
+    whatsapp: "+34685570983",
   },
 };

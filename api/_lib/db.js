@@ -59,4 +59,8 @@ async function withTx(fn, { userId = null, bypass = false } = {}) {
   }
 }
 
-export { getPool, withTx };
+async function query(text, params) {
+  return getPool().query(text, params);
+}
+
+export { getPool, withTx, query };

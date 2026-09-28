@@ -1,8 +1,9 @@
-﻿import { useAuthStore } from '../store/authStore';
+import { useAuthStore } from '../store/authStore';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 import { useI18nStore } from '../store/i18nStore';
 import { useSettingsStore } from '../store/settingsStore';
 import { BRAND_CONFIG } from '../config/brandConfig';
+import BokadipanLogo from './BokadipanLogo';
 
 const UKFlag = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" className="w-6 h-4 rounded-[2px] shadow-[0_0_5px_rgba(0,0,0,0.2)]">
@@ -44,20 +45,9 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-xl border-b border-brand-border shadow-sm transition-all">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 px-4 sm:px-8 py-3">
-        {/* Marca y Logo */}
+        {/* Marca y Logo BOKADIPAN */}
         <div className="flex items-center gap-3 cursor-pointer group" onClick={() => window.scrollTo({top:0,behavior:'smooth'})}>
-          {BRAND_CONFIG.assets.logoUrl ? (
-            <img
-              src={BRAND_CONFIG.assets.logoUrl}
-              alt={BRAND_CONFIG.name}
-              className="h-9 md:h-10 w-auto object-contain"
-              onError={(e) => {
-                (e.target as HTMLElement).style.display = 'none';
-              }}
-            />
-          ) : (
-            <span className="font-display font-black text-xl text-brand-ink">{BRAND_CONFIG.shortName}</span>
-          )}
+          <BokadipanLogo showTagline={true} />
           <div className="hidden sm:block">
             <span className="text-[9px] font-extrabold bg-brand-primaryLight text-brand-primary px-2 py-0.5 rounded-full uppercase tracking-wider font-display border border-brand-primary/20">
               {BRAND_CONFIG.city || 'ONLINE'}

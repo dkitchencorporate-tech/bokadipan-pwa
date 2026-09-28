@@ -30,6 +30,7 @@
 
 ## 2. HISTORIAL COMPACTADO DE HITOS PREVIOS
 
+* **28-sep-2026 (v1.3.0):** Corrección integral de responsividad y contraste en `UpsellModal` y `CheckoutModal` (paleta rústica `#2D5A27`/`#FAF6F0`/`#E5DCD0`, botones CTA contrastados con texto blanco nítido, sin desbordamientos en móvil).
 * **28-sep-2026 (v1.2.0):** Implementación de subcategorías agrupadas para bebidas (1 sola tarjeta con imagen + modal interactivo rápido), diseño rústico total (bordes `#E5DCD0`, fondo `#FAF6F0`, verde `#2D5A27`, scrollbar de obrador) y saneamiento de mapeo de imágenes.
 * **28-sep-2026 (v1.1.0):** Saneamiento de concepto Delivery (eliminadas tapas/Bionade), nuevas fotografías macro de bocadillos, logo vector SVG robusto en Header y preloader animado con atmósfera de obrador rústico.
 * **28-sep-2026 (v1.0.0):** Despliegue productivo exitoso en Vercel (`https://bokadipan-pwa.vercel.app`), resolución de sintaxis JSX, publicación en GitHub y configuración de base de datos e identidad Mediterráneo Orgánico.

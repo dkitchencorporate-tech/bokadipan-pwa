@@ -104,36 +104,36 @@ export const BRAND_CONFIG: BrandConfig = {
   city: "Madrid (CP 28108), España",
   postalCodesAllowed: ["28108", "28100", "28050", "28049", "28033", "28034"],
 
-  // 3. Sistema de Diseño Tokenizado (Mediterráneo Orgánico & Pan Rústico)
+  // 3. Sistema de Diseño Tokenizado (Mediterráneo Rústico Profundo: Verde Oliva Bosque, Madera Tostada y Crema)
   theme: {
-    primary: "#4D7C0F",        // Verde Oliva Intenso (AOVE & Frescura)
-    primaryHover: "#3F6212",   // Verde Oliva Oscuro
-    primaryLight: "#ECFCCB",   // Fondo Verde Oliva Suave
-    accent: "#D97706",         // Dorado Ámbar (Pan Crujiente Horno de Piedra)
-    accentHover: "#B45309",    // Ámbar Oscuro
-    surface: "#FDFBF7",        // Fondo Marfil Cálido Rústico
+    primary: "#2D5A27",        // Verde Oliva Profundo (AOVE Premium & Carácter Artesanal)
+    primaryHover: "#1E3D1A",   // Verde Oliva Bosque Oscuro
+    primaryLight: "#EAF2E8",   // Fondo Verde Oliva Suave
+    accent: "#B45309",         // Tostado Horno de Piedra (Marrón Ámbar Rústico)
+    accentHover: "#92400E",    // Marrón Tostado Intenso
+    surface: "#FAF6F0",        // Crema Marfil Cálido Panadería Rústica
     card: "#FFFFFF",           // Fondo de Tarjetas Blanco Puro
-    cardHover: "#FEFCE8",      // Hover Tarjetas Cálido
-    ink: "#1E293B",            // Texto Principal Grafito Oscuro (Máximo Contraste)
-    inkSoft: "#64748B",        // Texto Secundario
-    border: "#E2E8F0",         // Bordes
-    gradientClass: "from-lime-900 via-stone-900 to-amber-950",
+    cardHover: "#FDFBF7",      // Hover Tarjetas Cálido Crema
+    ink: "#1A201A",            // Texto Grafito Profundo (Máximo Contraste)
+    inkSoft: "#5C6B5C",        // Texto Secundario Oliva Suave
+    border: "#E5DCD0",         // Borde Tono Harina / Madera Cálida
+    gradientClass: "from-[#1B3A1B] via-[#78350F] to-[#B45309]",
   },
 
   // 4. Recursos Multimedia
   assets: {
     logoUrl: "/assets/brand/logo.svg",
     logoDarkUrl: "/assets/brand/logo.svg",
-    faviconUrl: "/favicon.ico",
-    heroBannerUrl: "",
-    placeholderProductUrl: "/assets/placeholder-food.svg",
+    faviconUrl: "/assets/brand/favicon.svg",
+    heroBannerUrl: "/assets/brand/hero_banner.jpg",
+    placeholderProductUrl: "/assets/products/bokadi_serrano.jpg",
   },
 
   // 5. Preloader / Splash Screen
   splash: {
     title: "BOKADIPAN",
-    subtitle: "Horno de piedra, pan rústico y AOVE...",
-    durationMs: 1200,
+    subtitle: "Horno de piedra, pan rústico & AOVE virgen extra",
+    durationMs: 1600,
   },
 
   // 6. Club de Fidelización

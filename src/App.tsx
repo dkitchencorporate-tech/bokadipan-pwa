@@ -18,6 +18,7 @@ import { BRAND_CONFIG } from './config/brandConfig';
 import { useI18nStore } from './store/i18nStore';
 import { isAnyModalOpen, wasModalPoppedRecently } from './utils/useHardwareBack';
 import { preloadCatalogData } from './lib/catalogPreload';
+import Preloader from './components/Preloader';
 
 function lazyWithReload<T extends { default: any }>(importer: () => Promise<T>) {
   return lazy(() =>
@@ -257,31 +258,9 @@ function App() {
   return (
     <div className="selection:bg-brand-primary selection:text-white">
       <NotificationManager />
-      {/* Preloader Agnóstico Tokenizado: Logotipo oficial de la marca + pulso minimalista */}
+      {/* Preloader BOKADIPAN: Lluvia de bocadillos, atmosfera de horno y barra de progreso */}
       {currentView === 'splash' && (
-        <div className={`fixed inset-0 z-[999] bg-white flex flex-col items-center justify-center overflow-hidden transition-opacity duration-700 ${isPreloaderFading ? 'opacity-0' : 'opacity-100'}`}>
-          <div className="relative z-10 flex flex-col items-center px-6 text-center animate-fade-in">
-            {BRAND_CONFIG.assets.logoUrl ? (
-              <img
-                src={BRAND_CONFIG.assets.logoUrl}
-                alt={BRAND_CONFIG.name}
-                className="w-[min(60vw,240px)] h-auto max-h-28 object-contain mb-6 drop-shadow-sm"
-                onError={(e) => {
-                  (e.target as HTMLElement).style.display = 'none';
-                }}
-              />
-            ) : null}
-            <div className="flex flex-col items-center animate-pulse">
-              <div className="w-10 h-1 bg-brand-primary rounded-full mb-4"></div>
-              <h2 className="text-brand-ink font-display font-black text-xl sm:text-2xl tracking-widest uppercase">
-                {BRAND_CONFIG.splash?.title || BRAND_CONFIG.name}
-              </h2>
-              <p className="text-brand-inkSoft text-xs sm:text-sm font-medium mt-2">
-                {BRAND_CONFIG.splash?.subtitle || BRAND_CONFIG.slogan || t('splash_desc')}
-              </p>
-            </div>
-          </div>
-        </div>
+        <Preloader isFading={isPreloaderFading} />
       )}
 
       {/* Main Catalog View */}

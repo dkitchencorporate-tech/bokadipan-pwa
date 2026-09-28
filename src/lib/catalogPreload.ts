@@ -1,14 +1,8 @@
 import { api } from './apiClient';
+import { BOKADIPAN_CATEGORIES, BOKADIPAN_PRODUCTS } from '../data/mockCatalog';
 
 // Precarga del catálogo (categorías, subcategorías, productos, ajustes de
-// tienda y horarios) para que arranque EN PARALELO con el preloader/splash,
-// no después de que termine. App.tsx llama a preloadCatalogData() en cuanto
-// monta; Catalog.tsx usa el resultado ya listo (o la misma promesa en curso)
-// en vez de repetir las consultas desde cero.
-//
-// GET /api/catalog trae todo en una sola llamada (antes eran 3 consultas
-// paralelas directas a Supabase) y ya tiene cache de 15s en el propio
-// endpoint, así que preloadCatalogData() sigue siendo barato de invalidar.
+// tienda y horarios) para que arranque EN PARALELO con el preloader/splash.
 type CatalogData = {
   categories: any[];
   subcategories: any[];
@@ -27,12 +21,26 @@ export function preloadCatalogData(): Promise<CatalogData> {
   inflightPromise = api
     .get('/catalog')
     .then((data) => {
+      const hasCategories = Array.isArray(data?.categories) && data.categories.length > 0;
+      const hasProducts = Array.isArray(data?.products) && data.products.length > 0;
+
       cachedData = {
-        categories: data?.categories || [],
+        categories: hasCategories ? data.categories : BOKADIPAN_CATEGORIES,
         subcategories: data?.subcategories || [],
-        products: data?.products || [],
-        settings: data?.settings || null,
+        products: hasProducts ? data.products : BOKADIPAN_PRODUCTS,
+        settings: data?.settings || { is_open: true, delivery_enabled: true },
         hours: data?.hours || []
+      };
+      return cachedData;
+    })
+    .catch((_err) => {
+      // Fallback a catálogo semilla de BOKADIPAN si la BD aún no está disponible
+      cachedData = {
+        categories: BOKADIPAN_CATEGORIES,
+        subcategories: [],
+        products: BOKADIPAN_PRODUCTS,
+        settings: { is_open: true, delivery_enabled: true },
+        hours: []
       };
       return cachedData;
     })

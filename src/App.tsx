@@ -17,20 +17,8 @@ import GuestRegistrationModal from './components/GuestRegistrationModal';
 import { BRAND_CONFIG } from './config/brandConfig';
 import { useI18nStore } from './store/i18nStore';
 import { isAnyModalOpen, wasModalPoppedRecently } from './utils/useHardwareBack';
+import { preloadCatalogData } from './lib/catalogPreload';
 
-// Cada despliegue publica los "trozos" de código (Catálogo, Admin, etc.) con nombre de
-// archivo nuevo. Si una pestaña quedó abierta desde antes de un despliegue y navega a una
-// sección que aún no había cargado, el navegador pide el trozo viejo — que ya no existe en
-// el servidor — y React lo lanza como error real, que el ErrorBoundary atrapa mostrando
-// "¡Ups! Algo salió mal". Con esto, ese fallo concreto se autorepara con una recarga
-// automática, sin necesidad de que el usuario haga nada.
-//
-// Se permite un reintento por cada incidente (no uno solo para siempre por pestaña):
-// una pestaña que sigue abierta durante varios despliegues seguidos puede toparse con
-// este fallo más de una vez, y cada vez debe autorepararse igual. El único límite es
-// no recargar dos veces en menos de 10 segundos — así, si el fallo fuera real y no un
-// simple desfase de despliegue, se deja de reintentar y se muestra el error de verdad
-// en vez de entrar en un bucle de recargas.
 function lazyWithReload<T extends { default: any }>(importer: () => Promise<T>) {
   return lazy(() =>
     importer().catch((error) => {
@@ -41,10 +29,8 @@ function lazyWithReload<T extends { default: any }>(importer: () => Promise<T>) 
       if (now - lastReloadAt > 10000) {
         sessionStorage.setItem(key, String(now));
         window.location.reload();
-        // Frena el render mientras la recarga ocurre, en vez de dejar que el error suba.
         return new Promise<T>(() => {});
       }
-      // Ya se recargó hace menos de 10s y sigue fallando: es un error real, no un despliegue.
       throw error;
     })
   );
@@ -55,8 +41,6 @@ const AdminDashboard = lazyWithReload(() => import('./pages/AdminDashboard'));
 const OrderTracking = lazyWithReload(() => import('./pages/OrderTracking'));
 const RegisterLanding = lazyWithReload(() => import('./pages/RegisterLanding'));
 const VerifyEmail = lazyWithReload(() => import('./pages/VerifyEmail'));
-
-import { preloadCatalogData } from './lib/catalogPreload';
 
 function App() {
   const { t } = useI18nStore();

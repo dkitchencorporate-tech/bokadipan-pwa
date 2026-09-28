@@ -1,7 +1,7 @@
 {
-  "name": "dkitchen-white-label-engine",
-  "version": "3.0.0",
-  "description": "Plantilla Matriz White-Label PWA para Restauración y Gastronomía por D-Kitchen Corporate Tech",
+  "name": "bokadipan-pwa",
+  "version": "1.0.0",
+  "description": "App Oficial de Pedidos, Carta Digital Interactiva y PWA de BOKADIPAN (España · ubicación virtual) por D-Kitchen Corporate Tech",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -10,12 +10,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dkitchencorporate-tech/dkitchen-white-label-engine.git"
+    "url": "git+https://github.com/dkitchencorporate-tech/bokadipan-pwa.git"
   },
   "keywords": [
     "pwa",
-    "white-label",
-    "restaurant-pos",
+    "bokadipan",
+    "pan-rustico",
+    "bocadillos-gourmet",
     "dkitchen",
     "food-ordering",
     "neon-postgres",
@@ -23,7 +24,7 @@
   ],
   "author": "D-Kitchen Corporate Tech <devops@dkitchencorporate.tech>",
   "license": "Proprietary",
-  "homepage": "https://github.com/dkitchencorporate-tech/dkitchen-white-label-engine#readme",
+  "homepage": "https://github.com/dkitchencorporate-tech/bokadipan-pwa#readme",
   "dependencies": {
     "@vercel/blob": "^2.8.0",
     "@types/react": "^19.2.18",

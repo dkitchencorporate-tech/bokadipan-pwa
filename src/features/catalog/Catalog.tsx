@@ -3,7 +3,7 @@ import Hero from '../../components/Hero';
 import ProductCard from '../../components/ProductCard';
 import IngredientsModal from '../../components/IngredientsModal';
 import { useState, useEffect } from 'react';
-import { DEFAULT_EXTRA_TOPPINGS, Product, getProductImageUrl } from '../../data/products';
+import { DEFAULT_EXTRA_TOPPINGS, Product, getProductImageUrl, LOCAL_IMAGE_MAP } from '../../data/products';
 import { api } from '../../lib/apiClient';
 import NotificationManager from '../../components/NotificationManager';
 import Footer from '../../components/Footer';
@@ -87,16 +87,23 @@ export default function Catalog() {
 
     const fetchData = async (opts: { showLoading: boolean } = { showLoading: true }) => {
       if (opts.showLoading) setIsLoading(true);
-      // Si App.tsx ya lanzó la precarga durante el preloader, esto resuelve al instante
-      // (o reutiliza la misma consulta en curso) en vez de repetir la llamada.
-      const cached = getCachedCatalogData();
-      const data = cached || (await preloadCatalogData());
+      try {
+        // Si App.tsx ya lanzó la precarga durante el preloader, esto resuelve al instante
+        // (o reutiliza la misma consulta en curso) en vez de repetir la llamada.
+        const cached = getCachedCatalogData();
+        const data = cached || (await preloadCatalogData());
 
-      if (data.categories) setCategories(data.categories);
-      if (data.subcategories) setSubcategories(data.subcategories);
-      setProducts(buildProducts(data.products, data.subcategories));
-      setIsSaturationMode(!!data.settings?.saturation_mode);
-      if (opts.showLoading) setIsLoading(false);
+        if (data?.categories) setCategories(data.categories);
+        if (data?.subcategories) setSubcategories(data.subcategories);
+        if (data?.products) {
+          setProducts(buildProducts(data.products, data.subcategories || []));
+        }
+        setIsSaturationMode(!!data?.settings?.saturation_mode);
+      } catch (err) {
+        console.error('Error cargando catálogo:', err);
+      } finally {
+        if (opts.showLoading) setIsLoading(false);
+      }
     };
     fetchData();
 

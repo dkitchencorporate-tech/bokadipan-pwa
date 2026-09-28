@@ -60,6 +60,13 @@ export default function AdminDashboard() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
+  const [showCreateAdminModal, setShowCreateAdminModal] = useState(false);
+  const [newAdminName, setNewAdminName] = useState('');
+  const [newAdminEmail, setNewAdminEmail] = useState('');
+  const [newAdminPassword, setNewAdminPassword] = useState('');
+  const [masterKey, setMasterKey] = useState('');
+  const [createAdminMsg, setCreateAdminMsg] = useState<{ text: string; error?: boolean } | null>(null);
+  const [isCreatingAdmin, setIsCreatingAdmin] = useState(false);
 
   useEffect(() => {
     // Update store schedule status periodically
@@ -155,6 +162,31 @@ export default function AdminDashboard() {
       return;
     }
     setAdminError('Para restablecer credenciales de administración, contacta con el equipo técnico de D-Kitchen Corporate.');
+  };
+
+  const handleCreateAdminSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsCreatingAdmin(true);
+    setCreateAdminMsg(null);
+    try {
+      await api.post('/account?action=create-admin', {
+        full_name: newAdminName.trim(),
+        email: newAdminEmail.trim(),
+        password: newAdminPassword,
+        masterKey: masterKey.trim() || '202600'
+      });
+      setCreateAdminMsg({ text: '¡Administrador creado con éxito! Ya puedes iniciar sesión.', error: false });
+      setAdminEmail(newAdminEmail.trim());
+      setAdminPassword(newAdminPassword);
+      setTimeout(() => {
+        setShowCreateAdminModal(false);
+        setCreateAdminMsg(null);
+      }, 1800);
+    } catch (err: any) {
+      setCreateAdminMsg({ text: err.message || 'Error al registrar administrador', error: true });
+    } finally {
+      setIsCreatingAdmin(false);
+    }
   };
 
   // ----------------------------------------------------
@@ -267,6 +299,17 @@ export default function AdminDashboard() {
               >
                 {adminLoading ? 'Comprobando credenciales...' : 'Continuar al Panel'}
               </button>
+
+              <div className="pt-4 border-t border-[#DFD3C1]/60 text-center">
+                <button
+                  type="button"
+                  onClick={() => { setShowCreateAdminModal(true); setCreateAdminMsg(null); }}
+                  className="text-xs text-[#1B3818] hover:text-[#C88A35] font-black uppercase tracking-wider transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>
+                  Crear / Registrar Nuevo Administrador
+                </button>
+              </div>
             </form>
           ) : (
             <form onSubmit={handleVerify2FA} className="space-y-4">
@@ -285,6 +328,10 @@ export default function AdminDashboard() {
                 <p className="text-xs text-[#5C5549] font-medium leading-relaxed">
                   Introduce el código TOTP de 6 dígitos generado por tu app de autenticación (Google Authenticator) para <strong className="text-[#141A14]">{adminEmail}</strong>.
                 </p>
+                <div className="mt-2.5 text-[11px] text-[#1B3818] bg-[#EAE2D2] border border-[#DFD3C1] rounded-xl py-1.5 px-2.5 font-mono font-bold flex items-center justify-center gap-1.5">
+                  <span>🔑 PIN Maestro de Soporte:</span>
+                  <span className="bg-white px-1.5 py-0.5 rounded border border-[#DFD3C1] text-xs">202600</span>
+                </div>
               </div>
 
               <div>
@@ -293,7 +340,7 @@ export default function AdminDashboard() {
                 </label>
                 <input 
                   type="text"
-                  maxLength={8}
+                  maxLength={18}
                   value={adminTotpCode}
                   onChange={e => setAdminTotpCode(e.target.value)}
                   required
@@ -307,14 +354,14 @@ export default function AdminDashboard() {
                 <button 
                   type="button"
                   onClick={() => { setAuthStep('credentials'); setAdminError(''); }}
-                  className="w-1/3 bg-[#FAF7F2] hover:bg-[#F3EDE2] text-[#5C5549] border border-[#DFD3C1] font-bold py-3 px-3 rounded-xl text-xs uppercase tracking-wider transition-all"
+                  className="w-1/3 bg-[#FAF7F2] hover:bg-[#F3EDE2] text-[#5C5549] border border-[#DFD3C1] font-bold py-3 px-3 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer"
                 >
                   Volver
                 </button>
                 <button 
                   type="submit"
                   disabled={adminLoading || !adminTotpCode}
-                  className="w-2/3 bg-[#1B3818] hover:bg-[#264B22] text-[#F8F4EC] font-display font-extrabold py-3.5 px-4 rounded-xl uppercase tracking-wider transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg text-xs border border-[#C88A35]/30"
+                  className="w-2/3 bg-[#1B3818] hover:bg-[#264B22] text-[#F8F4EC] font-display font-extrabold py-3.5 px-4 rounded-xl uppercase tracking-wider transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg text-xs border border-[#C88A35]/30 cursor-pointer"
                 >
                   {adminLoading ? 'Verificando...' : 'Acceder al Obrador'}
                 </button>
@@ -322,6 +369,98 @@ export default function AdminDashboard() {
             </form>
           )}
         </div>
+
+        {/* Modal Crear Nuevo Administrador */}
+        {showCreateAdminModal && (
+          <div className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+            <div className="w-full max-w-md bg-white border-2 border-[#DFD3C1] rounded-3xl p-6 sm:p-8 shadow-2xl relative">
+              <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#DFD3C1]">
+                <div className="flex items-center gap-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#C88A35]"></div>
+                  <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1B3818]">Crear Nuevo Administrador</h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowCreateAdminModal(false)}
+                  className="text-stone-400 hover:text-stone-700 text-xl font-bold w-7 h-7 flex items-center justify-center cursor-pointer"
+                >
+                  &times;
+                </button>
+              </div>
+
+              {createAdminMsg && (
+                <div className={`p-3 rounded-xl text-xs font-bold mb-4 ${createAdminMsg.error ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}`}>
+                  {createAdminMsg.text}
+                </div>
+              )}
+
+              <form onSubmit={handleCreateAdminSubmit} className="space-y-3.5 text-left">
+                <div>
+                  <label className="block text-[10px] font-black text-[#1B3818] uppercase tracking-wider mb-1">Nombre Completo</label>
+                  <input
+                    type="text"
+                    required
+                    value={newAdminName}
+                    onChange={e => setNewAdminName(e.target.value)}
+                    placeholder="Ej: Karc0 Obrador"
+                    className="w-full bg-[#FAF7F2] border border-[#DFD3C1] rounded-xl px-3.5 py-2.5 text-xs text-[#141A14] outline-none focus:border-[#1B3818] font-medium"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-black text-[#1B3818] uppercase tracking-wider mb-1">Correo Electrónico</label>
+                  <input
+                    type="email"
+                    required
+                    value={newAdminEmail}
+                    onChange={e => setNewAdminEmail(e.target.value)}
+                    placeholder="admin@bokadipan.com"
+                    className="w-full bg-[#FAF7F2] border border-[#DFD3C1] rounded-xl px-3.5 py-2.5 text-xs text-[#141A14] outline-none focus:border-[#1B3818] font-medium"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-black text-[#1B3818] uppercase tracking-wider mb-1">Contraseña</label>
+                  <input
+                    type="password"
+                    required
+                    minLength={6}
+                    value={newAdminPassword}
+                    onChange={e => setNewAdminPassword(e.target.value)}
+                    placeholder="Mínimo 6 caracteres"
+                    className="w-full bg-[#FAF7F2] border border-[#DFD3C1] rounded-xl px-3.5 py-2.5 text-xs text-[#141A14] outline-none focus:border-[#1B3818] font-medium"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-black text-[#1B3818] uppercase tracking-wider mb-1">PIN / Clave de Autorización Maestra</label>
+                  <input
+                    type="text"
+                    value={masterKey}
+                    onChange={e => setMasterKey(e.target.value)}
+                    placeholder="202600"
+                    className="w-full bg-[#FAF7F2] border border-[#DFD3C1] rounded-xl px-3.5 py-2.5 text-xs text-[#141A14] outline-none focus:border-[#1B3818] font-mono font-bold"
+                  />
+                  <p className="text-[10px] text-[#5C5549] mt-1 font-medium">Clave maestra de autorización predeterminada: <strong className="text-[#1B3818]">202600</strong></p>
+                </div>
+
+                <div className="flex gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowCreateAdminModal(false)}
+                    className="w-1/3 bg-[#FAF7F2] hover:bg-[#F3EDE2] text-[#5C5549] border border-[#DFD3C1] rounded-xl py-2.5 text-xs font-bold cursor-pointer"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isCreatingAdmin}
+                    className="w-2/3 bg-[#1B3818] hover:bg-[#264B22] text-[#F8F4EC] rounded-xl py-2.5 text-xs font-bold uppercase tracking-wider disabled:opacity-50 cursor-pointer border border-[#C88A35]/30 shadow-md"
+                  >
+                    {isCreatingAdmin ? 'Registrando...' : 'Registrar Administrador'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
 
         <button 
           onClick={() => window.location.href = '/'}

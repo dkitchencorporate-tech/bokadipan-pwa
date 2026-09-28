@@ -62,10 +62,14 @@ export default function Preloader({ isFading }: PreloaderProps) {
             <span className="truncate pr-2">{statusStep}</span>
             <span className="text-[#C88A35] shrink-0 font-mono font-black">{progress}%</span>
           </div>
-          <div className="h-1.5 w-full bg-black/60 rounded-full overflow-hidden p-0.5 border border-[#C88A35]/30">
+          <div className="h-2 w-full bg-black/60 rounded-full overflow-hidden p-0.5 border border-[#C88A35]/40 shadow-inner">
             <div
-              className="h-full bg-gradient-to-r from-[#C88A35] to-[#FDE047] rounded-full transition-all duration-500 ease-out"
-              style={{ width: `${progress}%` }}
+              className="h-full rounded-full transition-all duration-500 ease-out"
+              style={{
+                width: `${progress}%`,
+                background: 'linear-gradient(90deg, #C88A35 0%, #EAB308 50%, #FACC15 100%)',
+                boxShadow: '0 0 12px rgba(250, 204, 21, 0.75)'
+              }}
             ></div>
           </div>
         </div>

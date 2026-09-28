@@ -5,8 +5,8 @@
   "description": "Bocadillos de autor en pan rústico al horno de piedra con AOVE. Menús con picoteo y bebida incluidos.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FDFBF7",
-  "theme_color": "#4D7C0F",
+  "background_color": "#F8F4EC",
+  "theme_color": "#1B3818",
   "orientation": "portrait",
   "scope": "/",
   "icons": [

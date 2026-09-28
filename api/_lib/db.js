@@ -18,9 +18,9 @@ types.setTypeParser(1700, (val) => (val === null ? null : parseFloat(val)));
 let pool;
 function getPool() {
   if (!pool) {
-    const connectionString = process.env.APP_DATABASE_URL;
+    const connectionString = process.env.APP_DATABASE_URL || process.env.DATABASE_URL || process.env.POSTGRES_URL;
     if (!connectionString) {
-      throw new Error('Falta la variable de entorno APP_DATABASE_URL');
+      throw new Error('Falta la variable de entorno APP_DATABASE_URL o DATABASE_URL');
     }
     pool = new Pool({
       connectionString,

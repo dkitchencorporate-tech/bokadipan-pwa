@@ -27,7 +27,8 @@ interface AuthState {
   logout: () => void;
   init: () => Promise<void>;
   fetchProfile: () => Promise<void>;
-  signIn: (identifier: string, password: string) => Promise<void>;
+  signIn: (identifier: string, password: string) => Promise<any>;
+  verify2FA: (email: string, code: string) => Promise<any>;
   register: (data: { full_name: string; phone: string; email?: string; password: string; address?: any }) => Promise<void>;
   updateProfile: (data: { full_name?: string; phone?: string; email?: string; address?: any }) => Promise<void>;
   fetchOrders: () => Promise<void>;
@@ -63,10 +64,22 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   signIn: async (identifier: string, password: string) => {
-    const { token, profile } = await api.post('/login', { identifier, password });
-    setToken(token);
-    set({ user: { id: profile.id, email: profile.email }, profile });
+    const res = await api.post('/login', { identifier, password });
+    if (res && res.requires_2fa) {
+      return res;
+    }
+    setToken(res.token);
+    set({ user: { id: res.profile.id, email: res.profile.email }, profile: res.profile });
     await get().fetchOrders();
+    return res;
+  },
+
+  verify2FA: async (email: string, code: string) => {
+    const res = await api.post('/account/verify-2fa', { email, code });
+    setToken(res.token);
+    set({ user: { id: res.profile.id, email: res.profile.email }, profile: res.profile });
+    await get().fetchOrders();
+    return res;
   },
 
   register: async (data) => {

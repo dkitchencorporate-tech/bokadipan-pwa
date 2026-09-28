@@ -11,24 +11,21 @@
 
 * **Marca:** BOKADIPAN — Bocadillos de Pan Rústico al Horno de Piedra con AOVE.
 * **URL Pública en Producción:** [`https://bokadipan-pwa.vercel.app`](https://bokadipan-pwa.vercel.app)
+* **Panel de Administración:** [`https://bokadipan-pwa.vercel.app/admin`](https://bokadipan-pwa.vercel.app/admin)
 * **Repositorio Oficial en GitHub:** [`dkitchencorporate-tech/bokadipan-pwa`](https://github.com/dkitchencorporate-tech/bokadipan-pwa) (rama `main`)
-* **Identidad Visual:** Obrador de Autor & Horno de Piedra Gourmet (Fondo Crema Cálido `#F8F4EC`, Verde Bosque Rústico Profundo `#1B3818`, Dorado Corteza Artesanal `#C88A35`, Bordes Kraft `#DFD3C1`, Tinta `#141A14`, Scrollbar de madera y piedra volcánica).
-* **Subdominio Corporativo DNS:** `bokadipan.dkitchencorporate.es` (CNAME `cname.vercel-dns.com`)
-* **Catálogo Integrado & Arquitectura de Subcategorías (Gobierno por BD):**
-  - **Bocadillos Gourmet:** 7 variedades con fotografías macro sin personas en papel kraft.
-  - **Complementos & Picoteo:** 4 productos con fotografías dedicadas (patatas rústicas, bolsa, aceitunas, encurtidos).
-  - **Postres Delivery:** Tarrinas selladas (Tiramisú, Mousse Belga, Cheesecake).
-  - **Bebidas Agrupadas:** 1 sola tarjeta visible con imagen por subcategoría (`Refrescos Clásicos`, `Cervezas Premium`, `Agua Mineral`) con modal rápido vertical.
-* **Componentes Visuales Rediseñados:**
-  - Emblema Vectorial Gourmet de Autor (`<BokadipanLogo />` con espigas de trigo y cortes de hogaza rústica en relieve).
-  - Preloader tipográfico sobrio y minimalista de alta gama.
-  - Hero banner limpio: eliminado cuadro de dirección flotante y repeticiones, insignia dorada *"AL HORNO DE PIEDRA"* de alto contraste.
-  - Modales (`CheckoutModal`, `UpsellModal`, `SubcategoryModal`, `IngredientsModal`) 100% integrados a la nueva paleta oscura gourmet.
+* **Base de Datos Neon PostgreSQL:** 100% configurada, migrada y sincronizada (`dkitchen-db`, branch `main`).
+* **Variables de Entorno Vercel:** `APP_DATABASE_URL`, `APP_JWT_SECRET`, `SUPER_ADMIN_EMAIL`, `SUPER_ADMIN_PASSWORD`, `SUPER_ADMIN_TOTP_SECRET`, `BRAND_NAME` aplicadas en Producción.
+* **Super Admin Oficial:** `dkitchen@dkitchencorporate.es` / 2FA TOTP RFC 6238 activo con secret `DKITCHENMASTER2026`.
+* **Identidad Visual & Rediseño Admin:** Login y Panel Admin 100% adaptados a la estética gourmet rústica (Verde Bosque Rústico `#1B3818`, Dorado Corteza `#C88A35`, Fondo Crema Kraft `#F8F4EC`, Emblema `<BokadipanLogo />`).
+* **Blindaje Anti-Fraude P0001:** Función PL/pgSQL `process_checkout` en BD con validación en servidor de precios de catálogo, stock y horarios.
+* **Batería de Test & Stress Audit:** 7/7 tests superados (100% success en Producción: Catálogo, Login Admin, 2FA TOTP, Rutas Protegidas, Blindaje de Accesos, Anti-Fraude y Ráfaga Concurrente de 15 reqs en 213ms).
+* **Subdominio Corporativo DNS:** `bokadipan.dkitchencorporate.es` (Registro CNAME hacia `cname.vercel-dns.com`).
 
 ---
 
 ## 2. HISTORIAL COMPACTADO DE HITOS PREVIOS
 
+* **28-sep-2026 (v1.8.0):** Configuración 100% de base de datos Neon con seed completo de Bokadipan, inyección de variables de entorno en Vercel, rediseño total de `/admin` y login con 2FA TOTP y superación del 100% de la batería de tests de estrés y seguridad en producción.
 * **28-sep-2026 (v1.7.0):** Reemplazo riguroso de adsets con imágenes reales y verificadas de alta gastronomía (aceitunas aliñadas tradicionales, encurtidos/banderillas, patatas fritas artesanas de bolsa, patatas rústicas, tiramisú en vaso, mousse de chocolate y cheesecake), eliminación de mención a sartén en descripción y purga de archivos temporales.
 * **28-sep-2026 (v1.6.0):** Saneamiento de imágenes de postres y complementos, y ajuste responsive de la cabecera superior y BokadipanLogo para evitar cualquier corte o desplazamiento en móviles.
 * **28-sep-2026 (v1.5.0):** Rediseño integral de identidad gourmet de autor (nuevo logotipo emblema de espigas/hogaza artesanal, preloader tipográfico sobrio sin saturación, paleta verde bosque profundo `#1B3818` / dorado corteza `#C88A35`, Hero simplificado de alto contraste y CheckoutModal sincronizado).

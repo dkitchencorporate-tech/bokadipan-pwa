@@ -168,10 +168,10 @@ export default function Catalog() {
       )}
 
       {/* Category Nav */}
-      <div className="sticky top-[68px] sm:top-[76px] z-40 w-full flex flex-col shadow-md transition-all mt-6">
-        <nav className="bg-[#FFFFFF]/95 backdrop-blur-xl border-b border-[#E5DCD0] py-4 w-full">
-          <div className="max-w-7xl mx-auto px-4 sm:px-8 overflow-x-auto no-scrollbar">
-            <div className="flex items-center justify-start xl:justify-center gap-2.5 sm:gap-3 text-sm font-display font-black uppercase tracking-wider min-w-max px-2 py-1">
+      <div className="sticky top-[52px] sm:top-[64px] z-40 w-full flex flex-col shadow-md transition-all mt-4">
+        <nav className="bg-[#FFFFFF]/95 backdrop-blur-xl border-b border-[#DFD3C1] py-3.5 w-full">
+          <div className="max-w-7xl mx-auto px-3 sm:px-8 overflow-x-auto no-scrollbar">
+            <div className="flex items-center justify-start xl:justify-center gap-2 sm:gap-3 text-sm font-display font-black uppercase tracking-wider min-w-max px-1 py-0.5">
               {displayCategories.map(cat => {
                 const isActive = activeCategory === cat;
                 
@@ -194,8 +194,8 @@ export default function Catalog() {
                       window.scrollTo({ top: 480, behavior: 'smooth' });
                     }}
                     className={isActive 
-                      ? 'category-pill active px-5 py-2.5 rounded-2xl font-black whitespace-nowrap shrink-0'
-                      : 'category-pill px-5 py-2.5 rounded-2xl whitespace-nowrap shrink-0'
+                      ? 'category-pill active px-4 sm:px-5 py-2 sm:py-2.5 rounded-2xl font-black whitespace-nowrap shrink-0'
+                      : 'category-pill px-4 sm:px-5 py-2 sm:py-2.5 rounded-2xl whitespace-nowrap shrink-0'
                     }
                   >
                     {cat === 'TODOS' ? t('full_menu') : tDynamic(cat)} ({count})
@@ -207,16 +207,16 @@ export default function Catalog() {
         </nav>
         
         {/* Marquee Ticker */}
-        <div className="w-full bg-[#FAF6F0] border-b border-[#E5DCD0] overflow-hidden relative flex items-center py-2 shadow-inner">
-          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#FAF6F0] to-transparent z-10 pointer-events-none"></div>
-          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#FAF6F0] to-transparent z-10 pointer-events-none"></div>
+        <div className="w-full bg-[#F8F4EC] border-b border-[#DFD3C1] overflow-hidden relative flex items-center py-2 shadow-inner">
+          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#F8F4EC] to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#F8F4EC] to-transparent z-10 pointer-events-none"></div>
           
           <div className="flex whitespace-nowrap animate-marquee items-center">
-              <span className="mx-8 text-[11px] sm:text-sm font-black text-[#1A201A] uppercase tracking-wide flex items-center gap-2 font-display">
+              <span className="mx-8 text-[11px] sm:text-sm font-black text-[#141A14] uppercase tracking-wide flex items-center gap-2 font-display">
                   🥖 {t('vip_ticker_msg')} 🌿
               </span>
               {/* Duplicate for infinite scroll loop */}
-              <span className="mx-8 text-[11px] sm:text-sm font-black text-[#1A201A] uppercase tracking-wide flex items-center gap-2 font-display">
+              <span className="mx-8 text-[11px] sm:text-sm font-black text-[#141A14] uppercase tracking-wide flex items-center gap-2 font-display">
                   🥖 {t('vip_ticker_msg')} 🌿
               </span>
           </div>

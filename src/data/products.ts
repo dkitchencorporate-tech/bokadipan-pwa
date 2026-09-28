@@ -61,10 +61,12 @@ export const LOCAL_IMAGE_MAP: Record<string, string> = {
     'Encurtidos de la Huerta': '/assets/products/encurtidos-artesanos.jpg',
 
     // Postres Artesanales en Tarrina Delivery
-    'Tiramisú Artesano en Tarrina': '/assets/products/cheesecake.jpg',
-    'Tiramisú Artesano': '/assets/products/cheesecake.jpg',
-    'Mousse de Chocolate Belga': '/assets/products/brownie-bites.jpg',
-    'Mousse de Chocolate y Fresas con Nata': '/assets/products/brownie-bites.jpg',
+    'Tiramisú Artesano en Tarrina': '/assets/products/tiramisu-artesano.jpg',
+    'Tiramisú Artesano': '/assets/products/tiramisu-artesano.jpg',
+    'Tiramisú': '/assets/products/tiramisu-artesano.jpg',
+    'Mousse de Chocolate Belga': '/assets/products/mousse_artesanal.jpg',
+    'Mousse de Chocolate y Fresas con Nata': '/assets/products/mousse_artesanal.jpg',
+    'Mousse de Chocolate': '/assets/products/mousse_artesanal.jpg',
     'Cheesecake de Frutos Rojos': '/assets/products/cheesecake.jpg',
     'Cheesecake': '/assets/products/cheesecake.jpg',
 

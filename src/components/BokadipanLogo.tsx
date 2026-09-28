@@ -6,16 +6,16 @@ interface LogoProps {
   light?: boolean;
 }
 
-export default function BokadipanLogo({ className = "h-10", showTagline = false, light = false }: LogoProps) {
+export default function BokadipanLogo({ className = "", showTagline = false, light = false }: LogoProps) {
   const textColor = light ? '#F8F4EC' : '#141A14';
   const goldAccent = '#C88A35';
   const deepForest = light ? '#E6EFE4' : '#1B3818';
 
   return (
-    <div className={`flex items-center gap-3 select-none ${className}`}>
+    <div className={`flex items-center gap-2 sm:gap-3 select-none shrink-0 ${className}`}>
       {/* High-End Artisan Bakery Insignia */}
-      <div className="relative w-10 h-10 shrink-0 rounded-2xl bg-[#1B3818] border-2 border-[#C88A35] shadow-md flex items-center justify-center overflow-hidden">
-        <svg viewBox="0 0 48 48" fill="none" className="w-7 h-7">
+      <div className="relative w-8 h-8 sm:w-10 sm:h-10 shrink-0 rounded-xl sm:rounded-2xl bg-[#1B3818] border-2 border-[#C88A35] shadow-md flex items-center justify-center overflow-hidden">
+        <svg viewBox="0 0 48 48" fill="none" className="w-5 h-5 sm:w-7 sm:h-7">
           {/* Wheat Ear / Espigas Top Right & Left */}
           <path d="M 24 10 C 26 14, 30 15, 34 14 C 32 18, 33 22, 36 24" stroke="#C88A35" strokeWidth="1.6" strokeLinecap="round" />
           <path d="M 24 10 C 22 14, 18 15, 14 14 C 16 18, 15 22, 12 24" stroke="#C88A35" strokeWidth="1.6" strokeLinecap="round" />
@@ -35,12 +35,12 @@ export default function BokadipanLogo({ className = "h-10", showTagline = false,
       </div>
 
       {/* Typography */}
-      <div className="flex flex-col text-left">
-        <div className="font-display font-black text-xl sm:text-2xl leading-none tracking-tight uppercase" style={{ color: textColor }}>
+      <div className="flex flex-col text-left shrink-0">
+        <div className="font-display font-black text-base sm:text-xl md:text-2xl leading-none tracking-tight uppercase" style={{ color: textColor }}>
           BOKADI<span style={{ color: goldAccent }}>PAN</span>
         </div>
         {showTagline && (
-          <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.25em] mt-1" style={{ color: deepForest }}>
+          <span className="hidden sm:block text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em] mt-1" style={{ color: deepForest }}>
             PAN RÚSTICO &bull; HORNO DE PIEDRA
           </span>
         )}

@@ -9,12 +9,21 @@ export const BOKADIPAN_CATEGORIES = [
     is_active: true
   },
   {
+    id: "complementos",
+    name: "Complementos & Picoteo",
+    name_en: "Sides & Craft Snacks",
+    description: "Raciones de patatas rústicas, patatas artesanas de bolsa, aceitunas selectas y encurtidos de la huerta.",
+    icon: "UtensilsCrossed",
+    sort_order: 2,
+    is_active: true
+  },
+  {
     id: "postres",
     name: "Postres Artesanos",
     name_en: "Artisan Desserts",
     description: "Postres artesanos en tarrina individual sellada para entrega a domicilio.",
     icon: "Cake",
-    sort_order: 2,
+    sort_order: 3,
     is_active: true
   },
   {
@@ -23,7 +32,7 @@ export const BOKADIPAN_CATEGORIES = [
     name_en: "Cold Drinks & Beers",
     description: "Refrescos fríos en lata 330ml, cervezas nacionales/importación y agua mineral.",
     icon: "GlassWater",
-    sort_order: 3,
+    sort_order: 4,
     is_active: true
   }
 ];
@@ -193,7 +202,77 @@ export const BOKADIPAN_PRODUCTS = [
     sort_order: 7
   },
 
-  // 🍰 2. POSTRES ARTESANOS (TARRINAS INDIVIDUALES DELIVERY)
+  // 🍟 2. COMPLEMENTOS & PICOTEO ARTESANAL
+  {
+    id: "patatas-rusticas",
+    name: "Ración de Patatas Fritas Rústicas",
+    slug: "patatas-rusticas",
+    category_id: "complementos",
+    category: "complementos",
+    description: "Patatas naturales cortadas a mano con piel, fritas en aceite limpio y sazonadas con sal marina y romero.",
+    price: 3.50,
+    image_url: "/assets/products/patatas-rusticas.jpg",
+    img_url: "/assets/products/patatas-rusticas.jpg",
+    img: "/assets/products/patatas-rusticas.jpg",
+    badge: "🥔 CASERAS",
+    is_available: true,
+    is_active: true,
+    is_featured: true,
+    sort_order: 1
+  },
+  {
+    id: "patatas-bolsa",
+    name: "Patatas Fritas de Bolsa Artesanas",
+    slug: "patatas-bolsa",
+    category_id: "complementos",
+    category: "complementos",
+    description: "Bolsa de patatas fritas artesanas crujientes en sartén con aceite de oliva y punto justo de sal.",
+    price: 2.00,
+    image_url: "/assets/products/patatas-bolsa.jpg",
+    img_url: "/assets/products/patatas-bolsa.jpg",
+    img: "/assets/products/patatas-bolsa.jpg",
+    badge: "✨ CRUJIENTES",
+    is_available: true,
+    is_active: true,
+    is_featured: false,
+    sort_order: 2
+  },
+  {
+    id: "aceitunas-alinadas",
+    name: "Ración de Aceitunas Aliñadas",
+    slug: "aceitunas-alinadas",
+    category_id: "complementos",
+    category: "complementos",
+    description: "Aceitunas manzanilla selectas aliñadas al estilo tradicional con orégano, ajo suave y AOVE.",
+    price: 2.50,
+    image_url: "/assets/products/aceitunas-alinadas.jpg",
+    img_url: "/assets/products/aceitunas-alinadas.jpg",
+    img: "/assets/products/aceitunas-alinadas.jpg",
+    badge: "🫒 SELECTAS",
+    is_available: true,
+    is_active: true,
+    is_featured: false,
+    sort_order: 3
+  },
+  {
+    id: "encurtidos-huerta",
+    name: "Ración de Encurtidos de la Huerta",
+    slug: "encurtidos-huerta",
+    category_id: "complementos",
+    category: "complementos",
+    description: "Selección de encurtidos artesanos: banderillas, pepinillos crujientes, cebollitas y guindillas suaves.",
+    price: 2.80,
+    image_url: "/assets/products/encurtidos-artesanos.jpg",
+    img_url: "/assets/products/encurtidos-artesanos.jpg",
+    img: "/assets/products/encurtidos-artesanos.jpg",
+    badge: "🥒 DE LA HUERTA",
+    is_available: true,
+    is_active: true,
+    is_featured: false,
+    sort_order: 4
+  },
+
+  // 🍰 3. POSTRES ARTESANOS (TARRINAS INDIVIDUALES DELIVERY)
   {
     id: "tiramisu-artesano",
     name: "Tiramisú Artesano en Tarrina",

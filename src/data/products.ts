@@ -46,6 +46,20 @@ export const LOCAL_IMAGE_MAP: Record<string, string> = {
     'Bokadi Burger': '/assets/products/bokadi_burger.jpg',
     'Bokadi Burger Steak': '/assets/products/bokadi_burger.jpg',
 
+    // Complementos & Picoteo Artesanal
+    'Ración de Patatas Fritas Rústicas': '/assets/products/patatas-rusticas.jpg',
+    'Ración de Patatas Fritas': '/assets/products/patatas-rusticas.jpg',
+    'Patatas Fritas Rústicas': '/assets/products/patatas-rusticas.jpg',
+    'Patatas Fritas de Bolsa Artesanas': '/assets/products/patatas-bolsa.jpg',
+    'Patatas de Bolsa': '/assets/products/patatas-bolsa.jpg',
+    'Patatas Fritas de Bolsa': '/assets/products/patatas-bolsa.jpg',
+    'Ración de Aceitunas Aliñadas': '/assets/products/aceitunas-alinadas.jpg',
+    'Ración de Aceitunas': '/assets/products/aceitunas-alinadas.jpg',
+    'Aceitunas Aliñadas': '/assets/products/aceitunas-alinadas.jpg',
+    'Ración de Encurtidos de la Huerta': '/assets/products/encurtidos-artesanos.jpg',
+    'Ración de Encurtidos': '/assets/products/encurtidos-artesanos.jpg',
+    'Encurtidos de la Huerta': '/assets/products/encurtidos-artesanos.jpg',
+
     // Postres Artesanales en Tarrina Delivery
     'Tiramisú Artesano en Tarrina': '/assets/products/cheesecake.jpg',
     'Tiramisú Artesano': '/assets/products/cheesecake.jpg',

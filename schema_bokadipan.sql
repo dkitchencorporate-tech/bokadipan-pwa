@@ -287,8 +287,9 @@ $$;
 -- Categorías Maestras
 INSERT INTO categories (id, name, description, icon, sort_order, is_active) VALUES
 ('bocadillos', 'Bocadillos Rústicos AOVE', 'Bocadillos gourmet de 20cm en pan artesanal al horno de piedra con aceite de oliva virgen extra (AOVE).', 'Utensils', 1, true),
-('postres', 'Postres Artesanos', 'Postres artesanos en tarrina individual sellada para entrega a domicilio.', 'Cake', 2, true),
-('bebidas', 'Bebidas & Cervezas Frías', 'Refrescos fríos en lata 330ml, cervezas nacionales/importación y agua mineral.', 'GlassWater', 3, true)
+('complementos', 'Complementos & Picoteo', 'Raciones de patatas rústicas, patatas artesanas de bolsa, aceitunas selectas y encurtidos de la huerta.', 'UtensilsCrossed', 2, true),
+('postres', 'Postres Artesanos', 'Postres artesanos en tarrina individual sellada para entrega a domicilio.', 'Cake', 3, true),
+('bebidas', 'Bebidas & Cervezas Frías', 'Refrescos fríos en lata 330ml, cervezas nacionales/importación y agua mineral.', 'GlassWater', 4, true)
 ON CONFLICT (id) DO UPDATE SET 
     name = EXCLUDED.name, 
     description = EXCLUDED.description, 
@@ -315,10 +316,16 @@ INSERT INTO products (id, name, slug, description, price, category_id, is_active
 ('bokadi-bacon', 'Bokadi Bacon & Queso', 'bokadi-bacon', 'Pan rústico de 20cm con tiras gruesas de bacon ahumado crujiente y doble capa de queso fundido derretido.', 9.80, 'bocadillos', true, true, false, ARRAY['gluten', 'lacteos'], 6),
 ('boka-atun', 'Boka - Atún Mediterráneo', 'boka-atun', 'Pan rústico de 20cm con atún claro de primera, jamón york, queso suave, finas rodajas de tomate, lechuga y cebolla.', 10.50, 'bocadillos', true, true, false, ARRAY['gluten', 'pescado', 'lacteos'], 7),
 
+-- Productos: Complementos & Picoteo Artesanal
+('patatas-rusticas', 'Ración de Patatas Fritas Rústicas', 'patatas-rusticas', 'Patatas naturales cortadas a mano con piel, fritas en aceite limpio y sazonadas con sal marina y romero.', 3.50, 'complementos', true, true, true, ARRAY[]::TEXT[], 8),
+('patatas-bolsa', 'Patatas Fritas de Bolsa Artesanas', 'patatas-bolsa', 'Bolsa de patatas fritas artesanas crujientes en sartén con aceite de oliva y punto justo de sal.', 2.00, 'complementos', true, true, false, ARRAY[]::TEXT[], 9),
+('aceitunas-alinadas', 'Ración de Aceitunas Aliñadas', 'aceitunas-alinadas', 'Aceitunas manzanilla selectas aliñadas al estilo tradicional con orégano, ajo suave y AOVE.', 2.50, 'complementos', true, true, false, ARRAY[]::TEXT[], 10),
+('encurtidos-huerta', 'Ración de Encurtidos de la Huerta', 'encurtidos-huerta', 'Selección de encurtidos artesanos: banderillas, pepinillos crujientes, cebollitas y guindillas suaves.', 2.80, 'complementos', true, true, false, ARRAY[]::TEXT[], 11),
+
 -- Productos: Postres Artesanales en Tarrina
-('tiramisu-artesano', 'Tiramisú Artesano en Tarrina', 'tiramisu-artesano', 'Auténtico tiramisú italiano con bizcocho savoiardi bañado en espresso, crema de mascarpone y cacao puro en polvo.', 3.50, 'postres', true, true, true, ARRAY['lacteos', 'huevo', 'gluten'], 8),
-('mousse-chocolate-delivery', 'Mousse de Chocolate Belga', 'mousse-chocolate-delivery', 'Mousse cremosa de chocolate negro belga 70% con virutas de chocolate crujiente en tarrina individual sellada.', 3.50, 'postres', true, true, false, ARRAY['lacteos'], 9),
-('cheesecake-frutos-rojos', 'Cheesecake de Frutos Rojos', 'cheesecake-frutos-rojos', 'Tarta de queso suave sobre base crujiente de galleta con coulis artesano de frambuesas y arándanos silvestres.', 3.50, 'postres', true, true, false, ARRAY['lacteos', 'gluten'], 10),
+('tiramisu-artesano', 'Tiramisú Artesano en Tarrina', 'tiramisu-artesano', 'Auténtico tiramisú italiano con bizcocho savoiardi bañado en espresso, crema de mascarpone y cacao puro en polvo.', 3.50, 'postres', true, true, true, ARRAY['lacteos', 'huevo', 'gluten'], 12),
+('mousse-chocolate-delivery', 'Mousse de Chocolate Belga', 'mousse-chocolate-delivery', 'Mousse cremosa de chocolate negro belga 70% con virutas de chocolate crujiente en tarrina individual sellada.', 3.50, 'postres', true, true, false, ARRAY['lacteos'], 13),
+('cheesecake-frutos-rojos', 'Cheesecake de Frutos Rojos', 'cheesecake-frutos-rojos', 'Tarta de queso suave sobre base crujiente de galleta con coulis artesano de frambuesas y arándanos silvestres.', 3.50, 'postres', true, true, false, ARRAY['lacteos', 'gluten'], 14),
 
 -- Subproductos: Refrescos Clásicos (Asociados a sub-refrescos)
 ('coca-cola', 'Coca-Cola Original', 'coca-cola', 'Lata 330ml bien fría.', 2.20, 'bebidas', true, true, false, ARRAY[]::TEXT[], 11),

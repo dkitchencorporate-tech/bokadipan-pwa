@@ -1,6 +1,7 @@
 import { useAuthStore } from '../store/authStore';
 import { useI18nStore } from '../store/i18nStore';
 import { BRAND_CONFIG } from '../config/brandConfig';
+import BokadipanLogo from './BokadipanLogo';
 
 export default function Hero() {
   const { t } = useI18nStore();
@@ -36,12 +37,12 @@ export default function Hero() {
             <h1 className="font-display font-black text-3xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-[1.05] uppercase drop-shadow-md">
               PAN RÚSTICO DE AUTOR<br/>
               <span className="text-[#FBBF24] bg-gradient-to-r from-[#F59E0B] via-[#FBBF24] to-[#FDE68A] bg-clip-text text-transparent">
-                + TAPA Y BEBIDA INCLUIDAS
+                AL HORNO DE PIEDRA
               </span>
             </h1>
 
             <p className="text-sm sm:text-base text-[#F5F5F4] font-medium leading-relaxed max-w-xl mx-auto sm:mx-0 drop-shadow">
-              Bocadillos crujientes de 20cm elaborados con aceite de oliva virgen extra. Cada pedido incluye tu ración de picoteo artesanal y bebida a elección.
+              Bocadillos crujientes de 20cm elaborados con pan recién horneado a la piedra y los mejores ingredientes selectos regados con auténtico aceite de oliva virgen extra.
             </p>
 
             <div className="pt-2 flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-3 sm:gap-4">
@@ -55,19 +56,12 @@ export default function Hero() {
           </div>
 
           {/* Side Logo Card */}
-          <div className="relative w-40 h-40 sm:w-52 sm:h-52 shrink-0 flex items-center justify-center">
+          <div className="relative w-44 h-44 sm:w-56 sm:h-56 shrink-0 flex items-center justify-center">
             <div className="absolute inset-0 bg-[#2D5A27]/30 rounded-3xl blur-2xl animate-pulse"></div>
-            <div className="relative w-full h-full bg-white/95 backdrop-blur-md rounded-3xl border-2 border-[#E5DCD0] p-6 shadow-2xl flex flex-col items-center justify-center text-center">
-              <img
-                src={BRAND_CONFIG.assets.logoUrl}
-                alt={BRAND_CONFIG.name}
-                className="w-full h-auto max-h-20 object-contain drop-shadow"
-                onError={(e) => {
-                  (e.target as HTMLElement).style.display = 'none';
-                }}
-              />
-              <div className="mt-2 text-[10px] font-black tracking-widest text-[#2D5A27] uppercase">
-                ALCOBENDAS & MADRID
+            <div className="relative w-full h-full bg-[#FAF6F0]/95 backdrop-blur-md rounded-3xl border-2 border-[#E5DCD0] p-5 shadow-2xl flex flex-col items-center justify-center text-center">
+              <BokadipanLogo showTagline={true} />
+              <div className="mt-3 text-[10px] font-black tracking-widest text-[#2D5A27] uppercase bg-[#EAF2E8] px-3 py-1 rounded-full border border-[#2D5A27]/20">
+                {BRAND_CONFIG.city || 'ALCOBENDAS & MADRID'}
               </div>
             </div>
           </div>

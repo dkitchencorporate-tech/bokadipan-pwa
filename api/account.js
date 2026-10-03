@@ -103,7 +103,6 @@ async function handleLogin(req, res) {
 
   try {
     const cleanLogin = String(loginId).trim().toLowerCase();
-    const isSuperAdmin = cleanLogin === SUPER_ADMIN_EMAIL;
 
     let profile = null;
     try {
@@ -118,21 +117,9 @@ async function handleLogin(req, res) {
       console.warn('Error buscando perfil en login:', dbErr.message);
     }
 
-    if (isSuperAdmin) {
-      const isSuperPass = process.env.SUPER_ADMIN_PASSWORD ? password === process.env.SUPER_ADMIN_PASSWORD : false;
-      const isHashMatch = profile?.password_hash ? await verifyPassword(password, profile.password_hash) : false;
-      if (!isSuperPass && !isHashMatch) {
-        return res.status(401).json({ error: 'Credenciales incorrectas' });
-      }
-
-      return res.status(200).json({
-        requires_2fa: true,
-        auth_type: 'totp',
-        email_hint: SUPER_ADMIN_EMAIL.replace(/(.{2})(.*)(@.*)/, '$1***$3'),
-        message: 'Introduce el código de 6 dígitos de tu aplicación Google Authenticator'
-      });
-    }
-
+    // Todos los administradores entran igual: perfil en la BD con is_admin y
+    // contraseña con bcrypt. (El antiguo desvío de superadmin pedía un 2FA que
+    // el panel no muestra y dejaba el acceso bloqueado.)
     if (!profile) {
       return res.status(401).json({ error: 'Credenciales incorrectas' });
     }

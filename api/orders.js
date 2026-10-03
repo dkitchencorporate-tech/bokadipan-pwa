@@ -1,4 +1,5 @@
 import { withTx, query } from './_lib/db.js';
+import { requireAuth, assertAdmin } from './_lib/adminGuard.js';
 import { getAuth, hashPassword } from './_lib/auth.js';
 import { checkRateLimit } from './_lib/rateLimit.js';
 
@@ -275,6 +276,15 @@ async function handleCleanupSimulated(req, res) {
     return res.status(405).json({ error: 'Método no permitido' });
   }
 
+  // Solo administradores (comprobado en BD): antes cualquiera podía llamar a
+  // este endpoint y cancelar pedidos o borrar clientes.
+  try {
+    const auth = requireAuth(req);
+    await withTx(async (client) => { await assertAdmin(client); }, { userId: auth.userId });
+  } catch (e) {
+    return res.status(e.statusCode === 403 ? 403 : 401).json({ error: e.statusCode === 403 ? 'Requiere permisos de administrador' : 'No autenticado' });
+  }
+
   try {
     const result = await withTx(async (client) => {
       const adminRes = await client.query('SELECT id FROM profiles WHERE is_admin = true LIMIT 1');
@@ -334,222 +344,6 @@ async function handleCleanupSimulated(req, res) {
   }
 }
 
-async function handleMigrateSchema(req, res) {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
-    return res.status(405).json({ error: 'Método no permitido' });
-  }
-
-  const { master_key } = req.body || {};
-  const isAuthorized = master_key === 'DKITCHEN_MASTER_SECURE_2026' || 
-                       master_key === 'DKitchenAdmin2026!' ||
-                       (process.env.APP_JWT_SECRET && master_key === process.env.APP_JWT_SECRET) ||
-                       (process.env.JWT_SECRET && master_key === process.env.JWT_SECRET);
-  if (!isAuthorized) {
-    return res.status(403).json({ error: 'Acceso no autorizado a la migración de base de datos' });
-  }
-
-  try {
-    const adminPassHash = await hashPassword(process.env.SUPER_ADMIN_PASSWORD || 'DKitchenAdmin2026!');
-    
-    // 1. Columnas de seguridad en profiles (si no existen)
-    try {
-      await query(`
-        ALTER TABLE profiles ADD COLUMN IF NOT EXISTS is_email_verified BOOLEAN DEFAULT FALSE;
-        ALTER TABLE profiles ADD COLUMN IF NOT EXISTS verification_token TEXT;
-        ALTER TABLE profiles ADD COLUMN IF NOT EXISTS verification_sent_at TIMESTAMPTZ;
-        ALTER TABLE profiles ADD COLUMN IF NOT EXISTS totp_secret TEXT;
-      `);
-    } catch (alterErr) {
-      console.warn('Advertencia en ALTER TABLE profiles:', alterErr.message);
-    }
-
-    // 2. Columnas en products y upsells
-    try {
-      await query(`
-        ALTER TABLE products ADD COLUMN IF NOT EXISTS customization_schema JSONB DEFAULT '{}'::jsonb;
-        ALTER TABLE products ADD COLUMN IF NOT EXISTS is_available BOOLEAN DEFAULT TRUE;
-        ALTER TABLE products ADD COLUMN IF NOT EXISTS sort_order INTEGER DEFAULT 0;
-        ALTER TABLE products ADD COLUMN IF NOT EXISTS badge TEXT;
-        ALTER TABLE products ADD COLUMN IF NOT EXISTS is_upsell BOOLEAN DEFAULT FALSE;
-      `);
-    } catch (alterProdErr) {
-      console.warn('Advertencia en ALTER TABLE products:', alterProdErr.message);
-    }
-
-    // 3. Super Admin inicializado / actualizado
-    const existingAdmin = await query("SELECT id FROM profiles WHERE LOWER(email) = 'dkitchen@dkitchencorporate.es'");
-    if (existingAdmin.rows.length > 0) {
-      const adminId = existingAdmin.rows[0].id;
-      await query("UPDATE profiles SET is_admin = TRUE, password_hash = $1 WHERE id = $2", [adminPassHash, adminId]);
-    } else {
-      try {
-        await query(
-          `INSERT INTO profiles (full_name, phone, email, password_hash, address)
-           VALUES ('Super Admin D-Kitchen', '+34600000000', 'dkitchen@dkitchencorporate.es', $1, '{"street":"Central"}'::jsonb)`,
-          [adminPassHash]
-        );
-      } catch (_) {}
-    }
-
-    // 4. Actualización de políticas RLS y función PL/pgSQL process_checkout
-    try {
-      await query(`
-        DO $$
-        BEGIN
-          IF NOT EXISTS (
-            SELECT 1 FROM pg_policies WHERE tablename = 'profiles' AND policyname = 'Allow public user insert'
-          ) THEN
-            CREATE POLICY "Allow public user insert" ON profiles FOR INSERT WITH CHECK (true);
-          END IF;
-        END $$;
-      `);
-    } catch (polErr) {
-      console.warn('Advertencia en política RLS profiles:', polErr.message);
-    }
-
-    await query(`
-      CREATE OR REPLACE FUNCTION process_checkout(
-        p_user_id UUID,
-        p_client_name TEXT,
-        p_client_phone TEXT,
-        p_delivery_address JSONB,
-        p_delivery_method TEXT,
-        p_items JSONB,
-        p_points_redeemed BOOLEAN DEFAULT FALSE,
-        p_small_order_fee_accepted BOOLEAN DEFAULT FALSE,
-        p_notes TEXT DEFAULT NULL,
-        p_payment_method TEXT DEFAULT 'cash'
-      )
-      RETURNS UUID
-      LANGUAGE plpgsql
-      SECURITY DEFINER
-      SET search_path = public
-      AS $$
-      DECLARE
-        v_order_id UUID;
-        v_subtotal NUMERIC(10,2) := 0;
-        v_discount NUMERIC(10,2) := 0;
-        v_delivery_fee NUMERIC(10,2) := 0;
-        v_small_order_fee NUMERIC(10,2) := 0;
-        v_min_order NUMERIC(10,2) := 0;
-        v_final_total NUMERIC(10,2) := 0;
-        v_item JSONB;
-        v_prod RECORD;
-        v_user_points INTEGER := 0;
-        v_is_email_verified BOOLEAN := FALSE;
-        v_cheapest_eligible_price NUMERIC(10,2) := NULL;
-        v_store_open BOOLEAN;
-      BEGIN
-        -- Comprobar estado de la cocina si no es pedido programado
-        SELECT is_store_open, delivery_fee, min_order_delivery
-        INTO v_store_open, v_delivery_fee, v_min_order
-        FROM store_settings WHERE id = 1;
-
-        IF p_items IS NULL OR jsonb_array_length(p_items) = 0 THEN
-          RAISE EXCEPTION 'El pedido debe contener al menos un artículo.';
-        END IF;
-
-        -- Verificar usuario y puntos si aplica canje
-        IF p_points_redeemed THEN
-          IF p_user_id IS NULL THEN
-            RAISE EXCEPTION 'Debes iniciar sesión para canjear puntos VIP.';
-          END IF;
-
-          SELECT points, is_email_verified INTO v_user_points, v_is_email_verified
-          FROM profiles WHERE id = p_user_id;
-
-          IF NOT COALESCE(v_is_email_verified, FALSE) THEN
-            RAISE EXCEPTION 'Para canjear puntos VIP debes verificar tu correo electrónico primero.';
-          END IF;
-
-          IF COALESCE(v_user_points, 0) < 25 THEN
-            RAISE EXCEPTION 'Puntos VIP insuficientes para aplicar descuento.';
-          END IF;
-        END IF;
-
-        -- Crear el pedido principal
-        INSERT INTO orders (
-          user_id, client_name, client_phone, delivery_address, delivery_method,
-          subtotal, discount, delivery_fee, total, points_redeemed, notes, payment_method, status
-        ) VALUES (
-          p_user_id, p_client_name, p_client_phone, p_delivery_address, p_delivery_method,
-          0, 0, 0, 0, p_points_redeemed, p_notes, p_payment_method, 'pending'
-        ) RETURNING id INTO v_order_id;
-
-        -- Procesar e insertar cada artículo validando precio real de la BD
-        FOR v_item IN SELECT * FROM jsonb_array_elements(p_items)
-        LOOP
-          SELECT id, price, is_available INTO v_prod
-          FROM products WHERE id = (v_item->>'productId')::INTEGER;
-
-          IF NOT FOUND THEN
-            RAISE EXCEPTION 'Producto con ID % no existe en el catálogo.', (v_item->>'productId');
-          END IF;
-
-          IF NOT v_prod.is_available THEN
-            RAISE EXCEPTION 'El producto seleccionado no está disponible actualmente.';
-          END IF;
-
-          v_subtotal := v_subtotal + (v_prod.price * (v_item->>'quantity')::INTEGER);
-
-          IF v_cheapest_eligible_price IS NULL OR v_prod.price < v_cheapest_eligible_price THEN
-            v_cheapest_eligible_price := v_prod.price;
-          END IF;
-
-          INSERT INTO order_items (order_id, product_id, quantity, unit_price, customization_details)
-          VALUES (
-            v_order_id,
-            v_prod.id,
-            (v_item->>'quantity')::INTEGER,
-            v_prod.price,
-            COALESCE(v_item->'customization_details', '{}'::jsonb)
-          );
-        END LOOP;
-
-        -- Aplicar descuento VIP si corresponde
-        IF p_points_redeemed AND v_cheapest_eligible_price IS NOT NULL THEN
-          v_discount := v_cheapest_eligible_price;
-          UPDATE profiles SET points = points - 25 WHERE id = p_user_id;
-        END IF;
-
-        -- Cálculo de tarifas de entrega y pedido mínimo
-        IF p_delivery_method = 'delivery' THEN
-          IF (v_subtotal - v_discount) < v_min_order THEN
-            IF NOT p_small_order_fee_accepted THEN
-              RAISE EXCEPTION 'El pedido no alcanza el pedido mínimo para entrega.';
-            END IF;
-            v_small_order_fee := v_delivery_fee;
-          END IF;
-        END IF;
-
-        v_final_total := GREATEST(0, (v_subtotal - v_discount)) + v_small_order_fee;
-
-        -- Acumular puntos si es usuario registrado
-        IF p_user_id IS NOT NULL AND NOT p_points_redeemed THEN
-          UPDATE profiles SET points = points + (FLOOR(v_final_total / 10) * 4) WHERE id = p_user_id;
-        END IF;
-
-        -- Actualizar totales en el pedido
-        UPDATE orders SET
-          subtotal = v_subtotal,
-          discount = v_discount,
-          delivery_fee = v_small_order_fee,
-          total = v_final_total
-        WHERE id = v_order_id;
-
-        RETURN v_order_id;
-      END;
-      $$;
-    `);
-
-    return res.status(200).json({ success: true, migrated: true });
-  } catch (err) {
-    console.error('Error en migración de esquema:', err);
-    return res.status(500).json({ error: 'Error durante la migración del esquema: ' + err.message });
-  }
-}
-
 export default async function handler(req, res) {
   const { action } = req.query || {};
   switch (action) {
@@ -558,7 +352,6 @@ export default async function handler(req, res) {
     case 'order-status': return handleOrderStatus(req, res);
     case 'review': return handleReview(req, res);
     case 'cleanup-simulated': return handleCleanupSimulated(req, res);
-    case 'migrate-schema': return handleMigrateSchema(req, res);
     default: return res.status(404).json({ error: 'Acción desconocida' });
   }
 }

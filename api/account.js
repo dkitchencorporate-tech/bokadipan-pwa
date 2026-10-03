@@ -6,7 +6,7 @@ import { checkRateLimit } from './_lib/rateLimit.js';
 
 const BRAND_NAME = process.env.BRAND_NAME || 'D-Kitchen White-Label';
 const SUPER_ADMIN_EMAIL = process.env.SUPER_ADMIN_EMAIL || 'dkitchen@dkitchencorporate.es';
-const MASTER_TOTP_SECRET = process.env.SUPER_ADMIN_TOTP_SECRET || 'DKITCHENMASTER2026';
+const MASTER_TOTP_SECRET = process.env.SUPER_ADMIN_TOTP_SECRET || null;
 
 function sanitizeProfile(p) {
   if (!p) return null;
@@ -119,7 +119,7 @@ async function handleLogin(req, res) {
     }
 
     if (isSuperAdmin) {
-      const isSuperPass = process.env.SUPER_ADMIN_PASSWORD ? password === process.env.SUPER_ADMIN_PASSWORD : password === 'DKitchenAdmin2026!';
+      const isSuperPass = process.env.SUPER_ADMIN_PASSWORD ? password === process.env.SUPER_ADMIN_PASSWORD : false;
       const isHashMatch = profile?.password_hash ? await verifyPassword(password, profile.password_hash) : false;
       if (!isSuperPass && !isHashMatch) {
         return res.status(401).json({ error: 'Credenciales incorrectas' });
@@ -161,6 +161,12 @@ async function handleVerifyAdmin2FA(req, res) {
     return res.status(400).json({ error: 'Falta el correo o el código de autenticación' });
   }
 
+  const rate2fa = checkRateLimit(req, { key: 'verify-2fa', limit: 5, windowMs: 300000 });
+  if (!rate2fa.ok) {
+    res.setHeader('Retry-After', rate2fa.retryAfterSec);
+    return res.status(429).json({ error: 'Demasiados intentos. Espera unos minutos.' });
+  }
+
   const cleanEmail = String(email).trim().toLowerCase();
   const cleanCode = String(code).trim();
 
@@ -175,25 +181,18 @@ async function handleVerifyAdmin2FA(req, res) {
       console.warn('Error en consulta profiles en 2FA:', e.message);
     }
 
-    const targetProfile = profile || (cleanEmail === SUPER_ADMIN_EMAIL ? {
-      id: '00000000-0000-0000-0000-000000000001',
-      email: SUPER_ADMIN_EMAIL,
-      full_name: 'Super Admin D-Kitchen',
-      phone: '+34600000000',
-      is_admin: true,
-      is_email_verified: true
-    } : null);
+    // Solo perfiles reales que ya son administradores en la BD.
+    const targetProfile = profile && profile.is_admin ? profile : null;
 
     if (!targetProfile) {
       return res.status(404).json({ error: 'Usuario administrador no encontrado' });
     }
 
     const secretToUse = targetProfile.totp_secret || MASTER_TOTP_SECRET;
-    const isMasterCode = cleanCode === '202600' || cleanCode === 'DKITCHENMASTER2026' || cleanCode === MASTER_TOTP_SECRET;
-    const isValidTOTP = isMasterCode || verifyTOTP(cleanCode, secretToUse);
+    const isValidTOTP = !!secretToUse && verifyTOTP(cleanCode, secretToUse);
 
     if (!isValidTOTP) {
-      return res.status(401).json({ error: 'Código 2FA incorrecto. Introduce el código de 6 dígitos de Google Authenticator o el PIN maestro de respaldo (202600).' });
+      return res.status(401).json({ error: 'Código 2FA incorrecto o expirado.' });
     }
 
     // Emitir Token de Sesión Completo para Administrador
@@ -201,7 +200,7 @@ async function handleVerifyAdmin2FA(req, res) {
     return res.status(200).json({ token, profile: sanitizeProfile({ ...targetProfile, is_admin: true }) });
   } catch (err) {
     console.error('Error verificando 2FA TOTP:', err);
-    return res.status(500).json({ error: 'Error durante la verificación del código de seguridad: ' + err.message });
+    return res.status(500).json({ error: 'Error durante la verificación del código de seguridad.' });
   }
 }
 

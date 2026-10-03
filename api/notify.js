@@ -6,6 +6,7 @@ import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import { withTx } from './_lib/db.js';
 import { requireAuth, assertAdmin } from './_lib/adminGuard.js';
+import { checkRateLimit } from './_lib/rateLimit.js';
 
 const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -247,6 +248,10 @@ async function handleSendTransactionalEmail(req, res) {
     return res.status(405).json({ error: 'Método no permitido' });
   }
 
+  // Límite por IP: evita usar este endpoint público como relé de correo.
+  const rate = checkRateLimit(req, { key: 'tx-email', limit: 5, windowMs: 600000 });
+  if (!rate.ok) return res.status(429).json({ error: 'Demasiados envíos. Inténtalo más tarde.' });
+
   const { type, to } = req.body || {};
   if (!transactionalTemplates[type]) {
     return res.status(400).json({ error: 'Tipo de correo desconocido' });
@@ -262,8 +267,25 @@ async function handleSendTransactionalEmail(req, res) {
   }
 
   try {
-    const appUrl = `https://${req.headers.host}/`;
-    const built = transactionalTemplates[type]({ ...(req.body || {}), appUrl });
+    // URL de la app desde configuración, nunca desde la cabecera Host (evita enlaces de phishing).
+    const appUrl = process.env.APP_URL
+      || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}/` : '/');
+
+    // Los correos de pedido solo salen para pedidos reales y recientes, con el
+    // total y el nombre leídos de la BD (no los que diga el navegador).
+    let orderData = {};
+    if (type === 'order_confirmation' || type === 'order_admin') {
+      const orderId = String((req.body || {}).orderId || '');
+      if (!/^[0-9a-f-]{36}$/i.test(orderId)) return res.status(200).json({ skipped: true });
+      const row = await withTx(async (client) => (await client.query(
+        "SELECT id, total, client_name FROM orders WHERE id = $1 AND created_at > now() - interval '2 hours'",
+        [orderId]
+      )).rows[0] || null, { bypass: true });
+      if (!row) return res.status(200).json({ skipped: true });
+      orderData = { orderId: row.id, total: row.total, clientName: row.client_name };
+    }
+
+    const built = transactionalTemplates[type]({ ...(req.body || {}), ...orderData, appUrl });
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT || 587),
